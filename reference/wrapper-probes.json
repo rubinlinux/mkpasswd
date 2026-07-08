@@ -1,0 +1,380 @@
+{
+  "plain": {
+    "password": "password",
+    "password#2": "password",
+    "password#3": "password",
+    "test": "test",
+    "a": "a",
+    "empty": "",
+    "abc": "abc"
+  },
+  "null": {
+    "password": "<null>",
+    "password#2": "<null>",
+    "password#3": "<null>",
+    "test": "<null>",
+    "a": "<null>",
+    "empty": "",
+    "abc": "<null>"
+  },
+  "crypt-nthash": {
+    "password": "$3$$8846f7eaee8fb117ad06bdd830b7586c",
+    "password#2": "$3$$8846f7eaee8fb117ad06bdd830b7586c",
+    "password#3": "$3$$8846f7eaee8fb117ad06bdd830b7586c",
+    "test": "$3$$0cb6948805f797bf2a82807973b89537",
+    "a": "$3$$186cb09181e2c2ecaac768c47c729904",
+    "empty": "",
+    "abc": "$3$$e0fba38268d0ec66ef1cb452d5885e53"
+  },
+  "ldap-cleartext": {
+    "password": "password",
+    "password#2": "password",
+    "password#3": "password",
+    "test": "test",
+    "a": "a",
+    "empty": "",
+    "abc": "abc"
+  },
+  "ldap-md5": {
+    "password": "{MD5}X03MO1qnZdYdgyfeuILPmQ==",
+    "password#2": "{MD5}X03MO1qnZdYdgyfeuILPmQ==",
+    "password#3": "{MD5}X03MO1qnZdYdgyfeuILPmQ==",
+    "test": "{MD5}CY9rzUYh03PK3k6DJie09g==",
+    "a": "{MD5}DMF1ucDxtqgxw5niaXcmYQ==",
+    "empty": "",
+    "abc": "{MD5}kAFQmDzST7DWlj99KOF/cg=="
+  },
+  "ldap-smd5": {
+    "password": "{SMD5}cqsdMAykaTXx38EGGOfFbXkRee1ABqXK",
+    "password#2": "{SMD5}X5cppKhV+IYJWlWCJLJyVgFv6VXMTriz",
+    "password#3": "{SMD5}wjIBfk0gqWGsXUm4A5ZjQzn1VKYsbSbd",
+    "test": "{SMD5}RtJ55zMHFVJQXmEQuDvjHcFFXwFOYhtK",
+    "a": "{SMD5}fLpFmp5BiG5hzl1bZgzmSrFJcNMDTrjd",
+    "empty": "",
+    "abc": "{SMD5}8DZNnE8vpDi5CooNR825JrrtOH4fXb/x"
+  },
+  "ldap-sha": {
+    "password": "{SHA}W6ph5Mm5Pz8GgiULbPgzG37mj9g=",
+    "password#2": "{SHA}W6ph5Mm5Pz8GgiULbPgzG37mj9g=",
+    "password#3": "{SHA}W6ph5Mm5Pz8GgiULbPgzG37mj9g=",
+    "test": "{SHA}qUqP5cyxm6YcTAhz05Hph5gvu9M=",
+    "a": "{SHA}hvfkN/qlp/zhXR3cuerq6jd2Z7g=",
+    "empty": "",
+    "abc": "{SHA}qZk+NkcGgWq6PiVxeFDCbJzQ2J0="
+  },
+  "ldap-ssha": {
+    "password": "{SSHA}4un+hVAE4puBsYk/Gcg8HEaULVrCGCuocVSmHQ==",
+    "password#2": "{SSHA}n3wGmX3N7Mmf42K/h1DfrgU6WJPQdV1e/IxHgQ==",
+    "password#3": "{SSHA}E/EPVEYolYuMMW9YYW2rKAANpZq8cG6q3oglIg==",
+    "test": "{SSHA}Szqb0cq377oUFw/4s8HjOZ93oT7D1Oukyggw+g==",
+    "a": "{SSHA}oY2Wh2WWfW6vK+bJnn9dVrE/g0vNYa4Or3m5qQ==",
+    "empty": "",
+    "abc": "{SSHA}9zdOpzR4VTORaXO7mfoZcUAgEvAv/fLANGAmAQ=="
+  },
+  "ldap-sha256": {
+    "password": "{SHA256}XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=",
+    "password#2": "{SHA256}XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=",
+    "password#3": "{SHA256}XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=",
+    "test": "{SHA256}n4bQgYhMfWWaL+qgxVrQFaO/TxsrC4Is0V1sFbDwCgg=",
+    "a": "{SHA256}ypeBEsobvcr6wjGzmiPcTaeG7/gUfE5yuYB3ha/uSLs=",
+    "empty": "",
+    "abc": "{SHA256}ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0="
+  },
+  "ldap-ssha256": {
+    "password": "{SSHA256}N8VtCouVWr81EAe9q7tI6xNqT0Z9uzGWjBudAJEouA777o+U0zVf+A==",
+    "password#2": "{SSHA256}1+3eM4sg0ToKRPyBV+wpV4jiJ+GnfM023n12RMD3fDY2Nd0r2cBRDA==",
+    "password#3": "{SSHA256}M91h39W/BRezttHYBJZPQpZLMLnYzDjb28vzRfsb5jI6MWJ1m2nMDQ==",
+    "test": "{SSHA256}5FCiWldV/an0pnFdW1ODkKhqdFhPKrF/XxbS6L5Aj/CMUAfVXrIAjw==",
+    "a": "{SSHA256}P5DuVlc4ZHinl0wOMFIHiq4GXQy5lgz6jNVBVA8o6O01M/2UFvMYfg==",
+    "empty": "",
+    "abc": "{SSHA256}lsdoRHJHQH3hNqeZfUydwLZsH6Wu5LsaEfCwC0R+jW8uadLNjfRc9A=="
+  },
+  "ldap-sha384": {
+    "password": "{SHA384}qLZLq9CsqRpZvbt3YbQh1PK7OCgNOnW6DyHyvrxFWD1EbFmGYMlM5oDEfRnDB4On",
+    "password#2": "{SHA384}qLZLq9CsqRpZvbt3YbQh1PK7OCgNOnW6DyHyvrxFWD1EbFmGYMlM5oDEfRnDB4On",
+    "password#3": "{SHA384}qLZLq9CsqRpZvbt3YbQh1PK7OCgNOnW6DyHyvrxFWD1EbFmGYMlM5oDEfRnDB4On",
+    "test": "{SHA384}doQSMg97CqWBL85CjcRwazyuUOAqZMqhangiSb/o78S37xzLEmJV0ZYEff7fF6Cp",
+    "a": "{SHA384}VKWbnyKwuAiA2EJ+VIt8I6vYc0huHwNdzpzWl+hRdQM8qojm1XvDXvrgta/TFF8x",
+    "empty": "",
+    "abc": "{SHA384}ywB1P0WjXou1oD1pmsZQBycsMqsO3tFjGotgWkP/W+2AhgcroefMI1i67KE0yCWn"
+  },
+  "ldap-ssha384": {
+    "password": "{SSHA384}UdSq4+mFReFqYEeHneyYdBCmrYL7D9bJlxrL1RSRI7Y/tAyb0HKwkCbI/Ws4F8nO6AAlffI/zgk=",
+    "password#2": "{SSHA384}Z6pPS8rjfjDrXNy08C6i+1fjxvxJXGaDj2iQTn2OIQGylTdyKEY/B/SyemvQjUtPXGrT8+QYAiw=",
+    "password#3": "{SSHA384}RlTOFo9Iv9TxUQjnPNiIY/1mD8EuTiZkC8fAEbB4avF7iI/fXYPXE2e8uhBFb2AIQy0vyhidnqg=",
+    "test": "{SSHA384}lU4EoH88wPGQ6ncc6V5y7EEPpiuviENrGq7/A48he3M4PD3Hbd9AlwFKqclsQ3Q+2IRJ+nqssM8=",
+    "a": "{SSHA384}d91jYfek83WqSx4+ROZ4ifafeAL9aTH4iMNbmMDqMq07S188WlPejcPDPzqteK8LRNmJoCzZjjE=",
+    "empty": "",
+    "abc": "{SSHA384}tWlC6XDjWp9bvAQbeT4ZocUQExkwI3NBmWHoEpu20Pfl1OfVT3Odc/0t9sJkQ+ojcZh6qvtaUBo="
+  },
+  "ldap-sha512": {
+    "password": "{SHA512}sQnzu7wkTrgkQZF+0G1hi5AI3Qmzvv0bXgc5THBqi7mAsdd4Xll27ASbRt9fEyavWi6m0QP9B8lThf+rDKy8hg==",
+    "password#2": "{SHA512}sQnzu7wkTrgkQZF+0G1hi5AI3Qmzvv0bXgc5THBqi7mAsdd4Xll27ASbRt9fEyavWi6m0QP9B8lThf+rDKy8hg==",
+    "password#3": "{SHA512}sQnzu7wkTrgkQZF+0G1hi5AI3Qmzvv0bXgc5THBqi7mAsdd4Xll27ASbRt9fEyavWi6m0QP9B8lThf+rDKy8hg==",
+    "test": "{SHA512}7iaw3Ur350mqGo7jwQrpkj9hiYB3Lkc/iBml1JQODbJ6wYX4oOHV+E+IvIh/1nsUNzLDBMxfqa2Ob1f1ACio/w==",
+    "a": "{SHA512}H0D8ktokFpR1CXnubPWC8tXX0o4YM13gWrxU0FYOD1MChgxlK/CNVgJSql50IQVG82n7u86MEs/HlXsmUv6adQ==",
+    "empty": "",
+    "abc": "{SHA512}3a81oZNherrMQXNJriBBMRLm+k6JqX6iCp7u5ktV05ohkpkqJ0/BqDa6PCOj/uu9RU1EI2Q86A4qmslPpUyknw=="
+  },
+  "ldap-ssha512": {
+    "password": "{SSHA512}m+ODn9jvKxhqpyy20Q30GIO2zGVdPoZq7JUf/XbK6hs4N8wi0jJx7dMkj7VPgJHWDi7G3SsTga6HCl2/+VHH6ye+gMZ/ozhP",
+    "password#2": "{SSHA512}xuCUA5pboTF7wRAVNEufm76YTUNdVOsN3Z3/7WoQMR+xjC5lYp3OfsP5+BiLJvZcsseVJqB4bgGctqilkLjH1nrk4MooiIPF",
+    "password#3": "{SSHA512}eoPCuZ8lxTQtgwbqAuBKZ9fmdadpcfn/T47DfmsI5ngH5AODpqTrb2YymGhGDU0dpvU1rsZ6Dc8i+ylmMr7fd38Dyjj+KB0v",
+    "test": "{SSHA512}6W0cTlYbnOBvcBej0eUpAYDkxVRdGyDgM8XT370ivSmpg6MD3+8n8AxWs2qam4Cm0Z/HlGaTvbWMofvvGfVarAoaW1leVqSf",
+    "a": "{SSHA512}Hcc32RkYWUgqF24Jqx0Gbth+bg60SN3y+5U2VHomdEDEceq1QMsIatfw5FiLsdSF8MTH6yoJbqhcURrBLWI1O7gMjKcgNm6G",
+    "empty": "",
+    "abc": "{SSHA512}ZrVzONUkQIup9sIcoafDEkpqbXWcdpvBocZVkM4ywifNHd6hTiSi+nVSq45bMy2J684G1+mHATX/ndw/2qpBZ6YT0ayNeDMg"
+  },
+  "ldap-crypt": {
+    "password": "{CRYPT}yP25ms9jObpU6",
+    "password#2": "{CRYPT}ibWEPMMsR.AJc",
+    "password#3": "{CRYPT}8bk0SSzVY8H92",
+    "test": "{CRYPT}X5iWHno7Ur4XA",
+    "a": "{CRYPT}eKEiUiz/2o3/E",
+    "empty": "",
+    "abc": "{CRYPT}6Jsmf/7UC6KbA"
+  },
+  "ldap-crypt-md5": {
+    "password": "{CRYPT}$1$o4cbWOY8$etZ2vzcqOpwbMHF7KFPpK.",
+    "password#2": "{CRYPT}$1$piEtQyEp$5hpDh9Trrf/p3O12Z6EJi/",
+    "password#3": "{CRYPT}$1$3odZ2ZbH$tLHLiTXbJ4HOn.Cc7rfF21",
+    "test": "{CRYPT}$1$oSuCYFHE$PD406TOvTZHDPfQoS2QxH0",
+    "a": "{CRYPT}$1$2VHypBRR$0EUgATuxkWtfJZ4uPQLJ50",
+    "empty": "",
+    "abc": "{CRYPT}$1$mOUReuqO$.DGJTWzaA5MFTWGadGG5.."
+  },
+  "ldap-crypt-blowfish": {
+    "password": "{CRYPT}$2y$12$NZw5tu69xNL0fYu7u/2X8urB8ICq1eU9wYC0.yDQc0XS3GnpmTE6e",
+    "password#2": "{CRYPT}$2y$12$h10S/0JGGQPC5dMvFgXp3.uXmO4a.BzjsDkgeMeRFQjM2euV.gPD2",
+    "password#3": "{CRYPT}$2y$12$s8HvqmygpbOnZf0f2XfDR.sIrRV/0eHydpDAKaKmoBSolYxjhI7mK",
+    "test": "{CRYPT}$2y$12$f7bSevYskU87RtkmmE6Oq.VlOtvaJVmXmh85ZHon.55DQwPAaqxuC",
+    "a": "{CRYPT}$2y$12$tUqE8YMlKlGsG/0rJ1I8gOvTOTdotsQ8clS5Mf7Z91H/cSn17QUzq",
+    "empty": "",
+    "abc": "{CRYPT}$2y$12$dxRPppmvAu9WDppH4ZY6y.l9a59GoIKX7.Eb4qP6uq5b7nGNII412"
+  },
+  "ldap-crypt-ext": {
+    "password": "{CRYPT}_J9..CJ4qM.kLqcawBwg",
+    "password#2": "{CRYPT}_J9..v0PciAq6FMiLsOw",
+    "password#3": "{CRYPT}_J9..6dCQCrScGx5icdk",
+    "test": "{CRYPT}_J9..OGWq3e6L.pckHW2",
+    "a": "{CRYPT}_J9...7nANE0lHPV0jvo",
+    "empty": "",
+    "abc": "{CRYPT}_J9..f7p84UYMqiUbusA"
+  },
+  "openldap-cleartext": {
+    "password": "password",
+    "password#2": "password",
+    "password#3": "password",
+    "test": "test",
+    "a": "a",
+    "empty": "",
+    "abc": "abc"
+  },
+  "openldap-md5": {
+    "password": "{MD5}X03MO1qnZdYdgyfeuILPmQ==",
+    "password#2": "{MD5}X03MO1qnZdYdgyfeuILPmQ==",
+    "password#3": "{MD5}X03MO1qnZdYdgyfeuILPmQ==",
+    "test": "{MD5}CY9rzUYh03PK3k6DJie09g==",
+    "a": "{MD5}DMF1ucDxtqgxw5niaXcmYQ==",
+    "empty": "",
+    "abc": "{MD5}kAFQmDzST7DWlj99KOF/cg=="
+  },
+  "openldap-smd5": {
+    "password": "{SMD5}KPOzBeeRoL0ruY1leXx8wR2AcCSVtXlD",
+    "password#2": "{SMD5}3gbXde41/CwljEqUUL6McNonSbiKcuMG",
+    "password#3": "{SMD5}9ujPcFHFUXrF7wyfysgc1ZYelReHx0kj",
+    "test": "{SMD5}tQe9T22/5tIVFYINxGh+jsnzX857JIu0",
+    "a": "{SMD5}i7vDCBAV9W5fQ3bea60mL7LtZ6x75Bnd",
+    "empty": "",
+    "abc": "{SMD5}Eyb7xDXRxm4lxLXOyYKYXzklId5/3g36"
+  },
+  "openldap-sha": {
+    "password": "{SHA}W6ph5Mm5Pz8GgiULbPgzG37mj9g=",
+    "password#2": "{SHA}W6ph5Mm5Pz8GgiULbPgzG37mj9g=",
+    "password#3": "{SHA}W6ph5Mm5Pz8GgiULbPgzG37mj9g=",
+    "test": "{SHA}qUqP5cyxm6YcTAhz05Hph5gvu9M=",
+    "a": "{SHA}hvfkN/qlp/zhXR3cuerq6jd2Z7g=",
+    "empty": "",
+    "abc": "{SHA}qZk+NkcGgWq6PiVxeFDCbJzQ2J0="
+  },
+  "openldap-ssha": {
+    "password": "{SSHA}MgoxVLiv0DGpoHw2eXpVS4uDnRJVunfT63YbSQ==",
+    "password#2": "{SSHA}1faE9w5A8aC71RiczX87Ry4aXS7t5VgAYTwE9w==",
+    "password#3": "{SSHA}i3u84rXxtfVu9B55tQSKGjS1vnsSNa30BpUTwA==",
+    "test": "{SSHA}8bXvs6XnFN6s9wnAAqIPn6Pmy+U5F1SysZbkjQ==",
+    "a": "{SSHA}iebPeXHC4L1AQiPeRVG2tYrtMmOfB/7/uLbPZQ==",
+    "empty": "",
+    "abc": "{SSHA}Z9vU7QkVLqZ+BP3I2mbRLciOHLuVXmWj1lMr2A=="
+  },
+  "openldap-crypt": {
+    "password": "{CRYPT}ekFfXxv9iay5A",
+    "password#2": "{CRYPT}Tk6qDgb/eb9pk",
+    "password#3": "{CRYPT}BQ5ZxmgXc9Eu.",
+    "test": "{CRYPT}AKboIsh6ydClE",
+    "a": "{CRYPT}idMAIJZmNsGz.",
+    "empty": "",
+    "abc": "{CRYPT}WixkKVDkrtJg2"
+  },
+  "openldap-crypt-md5": {
+    "password": "{CRYPT}$1$4.L6gzjb$MElV4Jbfj8GxxF83yylIn0",
+    "password#2": "{CRYPT}$1$tzoMmM9q$Iq1ezvBadbZKQHgd7HuUc/",
+    "password#3": "{CRYPT}$1$gIDSazw9$JnZHIlTTILQEBsiS45xPW.",
+    "test": "{CRYPT}$1$qT3h/0My$BzEWabjQl8UXldN8tAEyz0",
+    "a": "{CRYPT}$1$XRcVbrdg$N90UL1kt2z6GVXcDJW5Wv.",
+    "empty": "",
+    "abc": "{CRYPT}$1$.q0xKU1f$39G7Bp5thBYn531G08gkQ1"
+  },
+  "openldap-crypt-blowfish": {
+    "password": "{CRYPT}$2y$12$xddKuOiGmQqfLf1I.WD4Pe267IIua2ZbcXLc7B/EoZWciOg3zzKWq",
+    "password#2": "{CRYPT}$2y$12$L7MBidYfFSBOdKoCHYjkzOtSQyC4UkoI6XipZKAOUcnlJ.4Ixhf4i",
+    "password#3": "{CRYPT}$2y$12$h23Apiz.qZuOkGM4qsAVAu.WU5HnnWr9V31I6v0UMVWuxMJSrOK3S",
+    "test": "{CRYPT}$2y$12$Idww8mOVsL6Q6Yd4kGlwEe6x0pocMwutoWfKoxONW./u73/yMZSIy",
+    "a": "{CRYPT}$2y$12$hMSuNZE.u/EUni5BhALlluhkJ5CAe9HIE66eF62W9r3YGliDGx10y",
+    "empty": "",
+    "abc": "{CRYPT}$2y$12$4ULoMvT1YQOiQg1qYzJ6G.AZMMQzhRxKtxfGVgUzrYjMiFWEgIgla"
+  },
+  "openldap-crypt-ext": {
+    "password": "{CRYPT}_J9..VuGYj/XJ5FVXmKA",
+    "password#2": "{CRYPT}_J9../KOMBdx7pCW7R2Q",
+    "password#3": "{CRYPT}_J9..hH3oU6B0bdYBeWw",
+    "test": "{CRYPT}_J9..fiNQmfOml61/oEU",
+    "a": "{CRYPT}_J9..oeOOmPvNsz6dSY2",
+    "empty": "",
+    "abc": "{CRYPT}_J9..oXaOZahyPRjMJ9M"
+  },
+  "apache-bcrypt": {
+    "password": "$2y$05$JfU/v2x0MTxqaQLMsSMFP.isHPK8hN6vm5K/DMOSvzwgTCCzirQhO",
+    "password#2": "$2y$05$73I1e1bOy81pZmuxhWXhNeSO7S0FQq9Nmbs3XNAPTtRusFeL3Zw/K",
+    "password#3": "$2y$05$I5z92LEpwaOWWuVof1KmleWuZVeUFYDPEGuMiX67cGyeFWMoCqdW2",
+    "test": "$2y$05$6owwQW5Utd3NUQSEBPLvQ.aAuaZnp4hWAUD1EpT9fmeXuMZLiQaCa",
+    "a": "$2y$05$Iy1BBF6EVB3MalkocaMNUeSVacYpDUmRrRmE47U9YA21fDkccjs.i",
+    "empty": "",
+    "abc": "$2y$05$kUY898Yr/u57TumiivpnZeKr7M8CO5acTB5JZVxxh4zGAq3.tYLeS"
+  },
+  "apache-crypt": {
+    "password": "Ub35pFC6SA/7s",
+    "password#2": ".8bypXUuL9p6o",
+    "password#3": "omDjdLfSeUPwQ",
+    "test": "giTr6dwDjDymU",
+    "a": "HbpdqjvgoxMmY",
+    "empty": "",
+    "abc": "7TEHQXm0MfCI6"
+  },
+  "apache-md5": {
+    "password": "$apr1$G3isE1rj$AZhn.Gfk2cWHclk/jPHMp/",
+    "password#2": "$apr1$HfYlGF1/$c3nkxIHz1ezi8ZiwUiv.I.",
+    "password#3": "$apr1$K07JTf4e$C1qDx5CAiAoaP7vRchzWy.",
+    "test": "$apr1$la6IIi0x$X0tNa1mRaAbNT5uykrYv7.",
+    "a": "$apr1$McjPiqck$UXOAZro7B3bPynVC2sycY0",
+    "empty": "",
+    "abc": "$apr1$Pu5HuZJF$ukh2Vil/md5CIs5glqr7E."
+  },
+  "apache-sha": {
+    "password": "{SHA}W6ph5Mm5Pz8GgiULbPgzG37mj9g=",
+    "password#2": "{SHA}W6ph5Mm5Pz8GgiULbPgzG37mj9g=",
+    "password#3": "{SHA}W6ph5Mm5Pz8GgiULbPgzG37mj9g=",
+    "test": "{SHA}qUqP5cyxm6YcTAhz05Hph5gvu9M=",
+    "a": "{SHA}hvfkN/qlp/zhXR3cuerq6jd2Z7g=",
+    "empty": "",
+    "abc": "{SHA}qZk+NkcGgWq6PiVxeFDCbJzQ2J0="
+  },
+  "apache-sha256": {
+    "password": "$5$QbBD0DUrBscAjPVK$5K16FmUg2KYIPZw6iDT.1H14ChEMi6sOaGKXFs7IEk8",
+    "password#2": "$5$z/lxheoB/CngMNDL$EAB3dAZFTgtRbF8zV1Xnvo8XFAghU6YJdI.P4W5esV1",
+    "password#3": "$5$2NJVpE7gS9nZpXE0$u1OZohHeBmL.8/n6P204OqBkcmNCiwlOwcrpWCarmI7",
+    "test": "$5$17bpXcPtZr2cfa7M$0O6MDfP0B6yZn/fKcTu3LC071jaFzc1WBECSDV8.yT8",
+    "a": "$5$KpEEb8qE6tDy90C/$vYjXN7EmX/tgWOkuC8NdNmoItFBnsjoc06CpGXGjcH8",
+    "empty": "",
+    "abc": "$5$JItUBgCnNOn0j4Ul$Arzy5DELji1lEZ8vdnmz0IMy1bN8Iu/fRMc9VBUBlg0"
+  },
+  "apache-sha512": {
+    "password": "$6$DQeQiE93.qMTXDD4$IfT8KQxHflXnDg2NkUIeVaKU8H753OSrbMe1F4NuJJi9JIedBGOD1/Q4ShaQSwIglaQwq4SshLCFAVXGbHwnk1",
+    "password#2": "$6$ockxYafPlFVch8uO$fKlPH81PmanFoWqzgjgsQaTIYEQRdhFspoY.NfjQV6axXIKeevO2ytFOIhzfTKL1fTUy5MwekUzQxLXffXPhg0",
+    "password#3": "$6$jYwHlPs30FFR0YPT$ZxkYfhW9yVt9yH/Eg3K6lF5l1KJzkjIp4o44CSDhYdvYYGw5agE.ZWN5hoYQZDl4iXlK8oLM2kJmIQne7WQPy0",
+    "test": "$6$dfoSmqrqiMaXJITc$VUF93LrEOq9a/zksIHOMx03O57hwzxkPK6yn4rGjdHllgUHztEzrXv/KizpIHUO6ZSsIC8RjOrG.xc.V2Lyz.1",
+    "a": "$6$at3NfE18FnmPvhqX$Det40KZmZn12Jxbu.NYt7iPcIftiuz3wswUBvVB2x9OgCBVtGk.rW5BJ5Efbios/96dbejMtIC165Vd3wRSXk0",
+    "empty": "",
+    "abc": "$6$Gb6haPtSmkvzp9wh$C4g5gUBm0BwAAYGkOJWWNvvr.YkCDI00X.CECDdIrlvxVQYnJKHpJgnGjUpYtqwZjLyBVpSde5tR9TY81rrYn1"
+  },
+  "ircu-plain": {
+    "password": "$PLAIN$password",
+    "password#2": "$PLAIN$password",
+    "password#3": "$PLAIN$password",
+    "test": "$PLAIN$test",
+    "a": "$PLAIN$a",
+    "empty": "",
+    "abc": "$PLAIN$abc"
+  },
+  "ircu-smd5": {
+    "password": "$SMD5$8f$fxZuU7Ghs2YM.7/zIKZg3.",
+    "password#2": "$SMD5$hH$UoqoyuyRNIDK0bIerhSia/",
+    "password#3": "$SMD5$8A$Xpm8HzlyNVLP9GfcEjNBl/",
+    "test": "$SMD5$aC$su.b9PKhl1UWcqIrtULtQ/",
+    "a": "$SMD5$d5$w686/OnRdW9ujVZ6TVQKH0",
+    "empty": "",
+    "abc": "$SMD5$WF$AExQQVU9WV0lWNZB0XjiH."
+  },
+  "unreal-argon2": {
+    "password": "$argon2id$v=19$m=6144,t=2,p=2$WFJBcVZ1MVhLdVBNWTFveA$a/GYyd5ZEjANHjN1xK5wbCsXhdxkiWEAVKAaX9j/UWM",
+    "password#2": "$argon2id$v=19$m=6144,t=2,p=2$UlZLZ2xNZmtFb1pkZTFyNQ$SnUB2VVKgyY2PW3ct3sh03HL63fO27fzaw15MyVv1dI",
+    "password#3": "$argon2id$v=19$m=6144,t=2,p=2$bUZydDFQZVQwR3YyODlBYw$SHNc2DMRpq03ph6Cf/ErHGiIqvyFzV3yIE3cLNLtFgk",
+    "test": "$argon2id$v=19$m=6144,t=2,p=2$Wkh4Zm9FRE1CMnhOZy5rZw$tS7jYKrkV39CL/PiuUXpOZuwNkbMf1dTmK++Xih3mJY",
+    "a": "$argon2id$v=19$m=6144,t=2,p=2$TndBSWdNTTU4SjljRVIyOA$Fz7gqn74BlYWTXj6dq60mSNAn9j6cVteULwpgYWvcOw",
+    "empty": "",
+    "abc": "$argon2id$v=19$m=6144,t=2,p=2$VGx4UEt0MGRFNUs3TjEybg$BCfnCmqkACd5vkPxSNDphbPAisbqTFG+09dgG2vEReE"
+  },
+  "unreal-argon2id": {
+    "password": "$argon2id$v=19$m=6144,t=2,p=2$YUIyRGVKc05aYWhjQmRrNw$U3dJPgCB3XQuT0yEsu6/Vm5gWl9jN762tmkjRQbpRJo",
+    "password#2": "$argon2id$v=19$m=6144,t=2,p=2$TS43UFhkajhMd2k5a0sybA$4P5wERparJo4OvLia5trnGc3hU4JE8iyG3mvbgC++5E",
+    "password#3": "$argon2id$v=19$m=6144,t=2,p=2$S1BaRGVJN3hWcUViMjMxRg$MeStWHObl4BZtS2gNhpsmbIcZxkRItE/FbtpTWQkAa4",
+    "test": "$argon2id$v=19$m=6144,t=2,p=2$RmhsT3h2RFh2YjBCV3QyLw$9LYmJZG925G3/s1M1jj7vz05ByRx19DVGE0QXg9IWnE",
+    "a": "$argon2id$v=19$m=6144,t=2,p=2$eElZNW9tTVhVNmVGV1IudA$GmLCHwiaDmsquV/DiremdTvMguyhfQ4nkHFzg3+h00A",
+    "empty": "",
+    "abc": "$argon2id$v=19$m=6144,t=2,p=2$SzA4ajVmY0hFcG9jei5GMg$gGDbRjSj5AtRBUP5UpkKKWPgwVb3VhCpRmYPJ1S6Hkg"
+  },
+  "unreal-bcrypt": {
+    "password": "$2y$09$mEL2VtyJWuYH2RYsTCz/UO9pBS42t2w4LWwuiAP9r3LVZdMWWv3RW",
+    "password#2": "$2y$09$cySN0B0c1MFpQ0uLRbQrL.Dy1KIjHh5Paj41p2AMIB1LskwqibTBW",
+    "password#3": "$2y$09$Eo2xXFVywUdWohfcBxH7cu0iuUQ2jck6X/bhTh0FFaVSa.07tl.dW",
+    "test": "$2y$09$zOtYkPmrpexeVzX7vkH8zehyYZH/Pux9hT7BW8tImyQWsqEwpbQ0e",
+    "a": "$2y$09$nNM1srFGCPzfpxQmGoLb4e3J20ebbqNeMEAwUUNdgrwm8ZpzykhN2",
+    "empty": "",
+    "abc": "$2y$09$Vp5d.pyvnMNcptYiLC6ueu92FDFvfr75dMYujP9/haSzKzuVfA9sy"
+  },
+  "unreal-crypt": {
+    "password": "h9YmdNIlXVq7M",
+    "password#2": "lobwLmuIgWIHo",
+    "password#3": "agnyWpMHmK1Tw",
+    "test": "v.Toh.SLsDsGw",
+    "a": "sm05gjSa12bf2",
+    "empty": "",
+    "abc": "M2Lq0NjFSkrps"
+  },
+  "unreal-md5": {
+    "password": "$EOmk4EfI$IPLxYoxJqMFYxsTIBWUXTQ==",
+    "password#2": "$b/h4nfSh$UtadmzkM7/IxhpLeZ66KiQ==",
+    "password#3": "$H3gpmsSe$pU2FHf4jvQGDTZ0/2lyqzg==",
+    "test": "$XhxSt+j/$Ff76F66hAfOq7HtnpmW7iA==",
+    "a": "$XhcTnEmH$dg7uLzHyf08nILxuDvKGDA==",
+    "empty": "",
+    "abc": "$0hkDWvYn$5RN7MN9bx5UQYUilItxc7A=="
+  },
+  "unreal-ripemd160": {
+    "password": "$krAUnTsR$AVxKbR5xgAXG08E7+N8Z4xCNzas=",
+    "password#2": "$aC1RbQlw$6frbngc1qnUDLYOG41eqYjaxSpQ=",
+    "password#3": "$jMQpsgak$mzVCyZYHelBij9TX8UhM5y9SKik=",
+    "test": "$b4oY03tN$0q5zO2f8PwOmpSaLybs/+W2qAAc=",
+    "a": "$eZ+JIzNT$zyncOO9WMJkdPf33TGuNt8PKeLM=",
+    "empty": "",
+    "abc": "$wLMdi/nQ$wYN0EAAZloyJf7HyR7VuiuMNWHc="
+  },
+  "unreal-sha1": {
+    "password": "$GscdJ6yj$8KOtGRCxNhbNVjcYJy/a0Mm34kE=",
+    "password#2": "$idcBRjTQ$f/72eSwhtW+r96sd+lzq6Pmqgsg=",
+    "password#3": "$WU8laY9I$wLPHoNOWxYjxn/Q7vwC93tKhAcI=",
+    "test": "$rcRo0FjC$9pHMmpHbGuHFCr8kuaMD9UDsQqM=",
+    "a": "$UwJDjh/P$7i64HGtVVFdNti+PUSe6+wFTFCk=",
+    "empty": "",
+    "abc": "$TBZVDcfE$Tk7poPPNfK7W6CjcTDpy18Ea3N8="
+  }
+}

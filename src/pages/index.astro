@@ -1,0 +1,30 @@
+---
+import '../styles/global.css'
+import HashApp from '../components/HashApp.vue'
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>mkpasswd — generate password hashes in your browser</title>
+    <meta
+      name="description"
+      content="Generate 100+ kinds of password hashes entirely in your browser. Nothing is ever sent to a server — every hash is computed locally with JavaScript and WebAssembly."
+    />
+    <meta property="og:title" content="mkpasswd — client-side password hashes" />
+    <meta property="og:description" content="100+ hash algorithms, computed locally. Your password never leaves the page." />
+    <meta property="og:type" content="website" />
+    <meta name="color-scheme" content="dark light" />
+  </head>
+  <body>
+    <HashApp client:load />
+    <noscript>
+      <p style="padding:2rem;text-align:center;font-family:sans-serif">
+        This tool runs entirely in your browser and needs JavaScript enabled.
+      </p>
+    </noscript>
+  </body>
+</html>

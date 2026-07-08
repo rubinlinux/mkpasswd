@@ -1,0 +1,343 @@
+{
+    "crypt": [
+        {
+            "type": "std_des",
+            "password_hex": "70617373776f7264",
+            "salt": "ab",
+            "hash": "abJnggxhB\/yWI"
+        },
+        {
+            "type": "std_des",
+            "password_hex": "70617373776f7264",
+            "salt": ".\/",
+            "hash": ".\/xZjzHv5vzVE"
+        },
+        {
+            "type": "std_des",
+            "password_hex": "766572796c6f6e6770617373776f7264",
+            "salt": "zz",
+            "hash": "zzwXCclkACT\/6"
+        },
+        {
+            "type": "std_des",
+            "password_hex": "61",
+            "salt": "yZ",
+            "hash": "yZfeErJoJBoN2"
+        },
+        {
+            "type": "std_des",
+            "password_hex": "70c3a4737377c3b67264",
+            "salt": "K9",
+            "hash": "K9QOS42ImnJc2"
+        },
+        {
+            "type": "std_des",
+            "password_hex": "",
+            "salt": "Qx",
+            "hash": "QxQq23QRlRlWU"
+        },
+        {
+            "type": "ext_des",
+            "password_hex": "70617373776f7264",
+            "salt": "_J9..abcd",
+            "hash": "_J9..abcdIPPmXD22F8s"
+        },
+        {
+            "type": "ext_des",
+            "password_hex": "70617373776f7264",
+            "salt": "_7C\/.abcd",
+            "hash": "_7C\/.abcdpsRgFoP9Jr2"
+        },
+        {
+            "type": "ext_des",
+            "password_hex": "766572796c6f6e6770617373776f72645f6c6f6e676572",
+            "salt": "_J9..SDiz",
+            "hash": "_J9..SDizECRYB1JXrA2"
+        },
+        {
+            "type": "ext_des",
+            "password_hex": "61",
+            "salt": "_1234wxyz",
+            "hash": "_1234wxyzXJ4DfjAuQJA"
+        },
+        {
+            "type": "ext_des",
+            "password_hex": "70c3a4737377c3b67264",
+            "salt": "_J9..abcd",
+            "hash": "_J9..abcdV0hU2JizUgE"
+        },
+        {
+            "type": "md5",
+            "password_hex": "70617373776f7264",
+            "salt": "$1$abcdefgh$",
+            "hash": "$1$abcdefgh$G\/\/4keteveJp0qb8z2DxG\/"
+        },
+        {
+            "type": "md5",
+            "password_hex": "70617373776f7264",
+            "salt": "$1$12345678$",
+            "hash": "$1$12345678$o2n\/JiO\/h5VviOInWJ4OQ\/"
+        },
+        {
+            "type": "md5",
+            "password_hex": "70617373776f7264",
+            "salt": "$1$ab$",
+            "hash": "$1$ab$oKsM6dtDD2L1bKowOBX.7."
+        },
+        {
+            "type": "md5",
+            "password_hex": "70617373776f7264",
+            "salt": "$1$$",
+            "hash": "$1$$I2o9Z7NcvQAKp7wyCTlia0"
+        },
+        {
+            "type": "md5",
+            "password_hex": "70617373776f7264",
+            "salt": "$1$abcdefghijkl$",
+            "hash": "$1$abcdefgh$G\/\/4keteveJp0qb8z2DxG\/"
+        },
+        {
+            "type": "md5",
+            "password_hex": "70c3a4737377c3b67264",
+            "salt": "$1$abcdefgh$",
+            "hash": "$1$abcdefgh$xYuxUFvxUOR4Pd6a7EeUS0"
+        },
+        {
+            "type": "md5",
+            "password_hex": "61",
+            "salt": "$1$abcdefgh$",
+            "hash": "$1$abcdefgh$jUYc1Xi7pkozuzWQ0Dft71"
+        },
+        {
+            "type": "md5",
+            "password_hex": "7979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979",
+            "salt": "$1$abcdefgh$",
+            "hash": "$1$abcdefgh$Izo14Rtm8E8Mkb4r9aAR50"
+        },
+        {
+            "type": "blowfish_2y",
+            "password_hex": "70617373776f7264",
+            "salt": "$2y$04$abcdefghijklmnopqrstuu",
+            "hash": "$2y$04$abcdefghijklmnopqrstuughE8Ev8uGFaUgY2cNEySvxngrb\/Jzdm"
+        },
+        {
+            "type": "blowfish_2y",
+            "password_hex": "70c3a4737377c3b67264",
+            "salt": "$2y$04$abcdefghijklmnopqrstuu",
+            "hash": "$2y$04$abcdefghijklmnopqrstuuyx2n0Zzopyr9QuYTMCfOJJOj526QVoC"
+        },
+        {
+            "type": "blowfish_2y",
+            "password_hex": "61",
+            "salt": "$2y$04$abcdefghijklmnopqrstuu",
+            "hash": "$2y$04$abcdefghijklmnopqrstuuMFdJu9yVgmagVAIC24fOZkaFqd3s9JC"
+        },
+        {
+            "type": "blowfish_2y",
+            "password_hex": "787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878",
+            "salt": "$2y$04$abcdefghijklmnopqrstuu",
+            "hash": "$2y$04$abcdefghijklmnopqrstuubzadhGtS2zEF.gu0yd0opP6cVzb.e0i"
+        },
+        {
+            "type": "blowfish_2y",
+            "password_hex": "7979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979",
+            "salt": "$2y$04$abcdefghijklmnopqrstuu",
+            "hash": "$2y$04$abcdefghijklmnopqrstuuwurWIdVVT4m5pTArtqnFNM69nySdHj."
+        },
+        {
+            "type": "blowfish_2a",
+            "password_hex": "70617373776f7264",
+            "salt": "$2a$04$abcdefghijklmnopqrstuu",
+            "hash": "$2a$04$abcdefghijklmnopqrstuughE8Ev8uGFaUgY2cNEySvxngrb\/Jzdm"
+        },
+        {
+            "type": "blowfish_2a",
+            "password_hex": "70c3a4737377c3b67264",
+            "salt": "$2a$04$abcdefghijklmnopqrstuu",
+            "hash": "$2a$04$abcdefghijklmnopqrstuuyx2n0Zzopyr9QuYTMCfOJJOj526QVoC"
+        },
+        {
+            "type": "blowfish_2a",
+            "password_hex": "61",
+            "salt": "$2a$04$abcdefghijklmnopqrstuu",
+            "hash": "$2a$04$abcdefghijklmnopqrstuuMFdJu9yVgmagVAIC24fOZkaFqd3s9JC"
+        },
+        {
+            "type": "blowfish_2a",
+            "password_hex": "787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878",
+            "salt": "$2a$04$abcdefghijklmnopqrstuu",
+            "hash": "$2a$04$abcdefghijklmnopqrstuubzadhGtS2zEF.gu0yd0opP6cVzb.e0i"
+        },
+        {
+            "type": "blowfish_2a",
+            "password_hex": "7979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979",
+            "salt": "$2a$04$abcdefghijklmnopqrstuu",
+            "hash": "$2a$04$abcdefghijklmnopqrstuuwurWIdVVT4m5pTArtqnFNM69nySdHj."
+        },
+        {
+            "type": "blowfish_2x",
+            "password_hex": "70617373776f7264",
+            "salt": "$2x$04$abcdefghijklmnopqrstuu",
+            "hash": "$2x$04$abcdefghijklmnopqrstuughE8Ev8uGFaUgY2cNEySvxngrb\/Jzdm"
+        },
+        {
+            "type": "blowfish_2x",
+            "password_hex": "70c3a4737377c3b67264",
+            "salt": "$2x$04$abcdefghijklmnopqrstuu",
+            "hash": "$2x$04$abcdefghijklmnopqrstuusLa1VKyG1SwS4T\/Tip3T\/Cdo9gT8Ol."
+        },
+        {
+            "type": "blowfish_2x",
+            "password_hex": "61",
+            "salt": "$2x$04$abcdefghijklmnopqrstuu",
+            "hash": "$2x$04$abcdefghijklmnopqrstuuMFdJu9yVgmagVAIC24fOZkaFqd3s9JC"
+        },
+        {
+            "type": "blowfish_2x",
+            "password_hex": "787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878",
+            "salt": "$2x$04$abcdefghijklmnopqrstuu",
+            "hash": "$2x$04$abcdefghijklmnopqrstuubzadhGtS2zEF.gu0yd0opP6cVzb.e0i"
+        },
+        {
+            "type": "blowfish_2x",
+            "password_hex": "7979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979797979",
+            "salt": "$2x$04$abcdefghijklmnopqrstuu",
+            "hash": "$2x$04$abcdefghijklmnopqrstuuwurWIdVVT4m5pTArtqnFNM69nySdHj."
+        },
+        {
+            "type": "blowfish_2y",
+            "password_hex": "70617373776f7264",
+            "salt": "$2y$10$abcdefghijklmnopqrstuu",
+            "hash": "$2y$10$abcdefghijklmnopqrstuu5Lo0g67CiD3M4RpN1BmBb4Crp5w7dbK"
+        },
+        {
+            "type": "sha256",
+            "password_hex": "70617373776f7264",
+            "salt": "$5$saltstring$",
+            "hash": "$5$saltstring$OH4IDuTlsuTYPdED1gsuiRMyTAwNlRWyA6Xr3I4\/dQ5"
+        },
+        {
+            "type": "sha256",
+            "password_hex": "70617373776f7264",
+            "salt": "$5$rounds=10000$saltstringsaltst$",
+            "hash": "$5$rounds=10000$saltstringsaltst$DnR6.aMZDwOMqtynA.o2eobA3dYZepULoyGw\/CZ4ID0"
+        },
+        {
+            "type": "sha256",
+            "password_hex": "70617373776f7264",
+            "salt": "$5$rounds=5000$abc$",
+            "hash": "$5$rounds=5000$abc$6va2Z4O.keO7R84v9g0B9d2NkB7NOyTy0sMeQ5Z3LLA"
+        },
+        {
+            "type": "sha256",
+            "password_hex": "70617373776f7264",
+            "salt": "$5$abcdefghijklmnopqrstuv$",
+            "hash": "$5$abcdefghijklmnop$ieyonWfl7MR75BuN79Fkt2PqhPI43TsNZYGUObDGVI\/"
+        },
+        {
+            "type": "sha256",
+            "password_hex": "70c3a4737377c3b67264",
+            "salt": "$5$saltstring$",
+            "hash": "$5$saltstring$bWOoCRTKNT.aiY\/gJjvk1HjBYuRpcYQmcc5hqf6H4T4"
+        },
+        {
+            "type": "sha256",
+            "password_hex": "61",
+            "salt": "$5$salt$",
+            "hash": "$5$salt$7p0.o3bzi2h7d5cGlDeRN33gONQRpRi7aNgP2TFs9a5"
+        },
+        {
+            "type": "sha256",
+            "password_hex": "70617373776f7264",
+            "salt": "$5$rounds=1000$short$",
+            "hash": "$5$rounds=1000$short$G6a7kCgkpoq2XWVJNOVxq6CFUfO7mHOsayZj\/hiCfo2"
+        },
+        {
+            "type": "sha512",
+            "password_hex": "70617373776f7264",
+            "salt": "$6$saltstring$",
+            "hash": "$6$saltstring$adDbXsJjcDlq2662QPgd.tkSOVmnG9Tt3oXl4HR60SusC3AGjirnDenVZp3DGwLwqy6iYKCzannhaX9DR72nN1"
+        },
+        {
+            "type": "sha512",
+            "password_hex": "70617373776f7264",
+            "salt": "$6$rounds=10000$saltstringsaltst$",
+            "hash": "$6$rounds=10000$saltstringsaltst$Qzq13AQeOS5aa8nj8fFRVn5cZkLp.t1PUmhPeygZiOwD7eFxWmcxrxGtIgnXDKoTYvTEmyGzyqVjaDGGtAurL\/"
+        },
+        {
+            "type": "sha512",
+            "password_hex": "70617373776f7264",
+            "salt": "$6$rounds=5000$abc$",
+            "hash": "$6$rounds=5000$abc$rvqzMBuMVukmply9mZJpW0wJMdDfgUKLDrSNxf9l66h\/ytQiKNAdqHSj5YPJpxWJpVjRXibQXRddCl9xYHQnd0"
+        },
+        {
+            "type": "sha512",
+            "password_hex": "70617373776f7264",
+            "salt": "$6$abcdefghijklmnopqrstuv$",
+            "hash": "$6$abcdefghijklmnop$0aenUFHf897F9u0tURIHOeACWajSuVGa7jgJGyq.DKZm\/WXl\/IZFvPbneFydBjomEOgM.Sh1m0L3KsS1.H5b\/\/"
+        },
+        {
+            "type": "sha512",
+            "password_hex": "70c3a4737377c3b67264",
+            "salt": "$6$saltstring$",
+            "hash": "$6$saltstring$6PSVl254uv0cWCoUS0qzSX5NenRA\/YFCwPzGA9ONu.MmmxqXTWHerEzD8WyuBl3ukfIZZU9uxLD6Bn6p7S3rG."
+        },
+        {
+            "type": "sha512",
+            "password_hex": "61",
+            "salt": "$6$salt$",
+            "hash": "$6$salt$TfbP0Ge1gqNJmxZYvNhvDmmKx9BigkML6b3w1kfEiAHpkKpCRu.SKIYV70wlcWGmbdh1koH3a0UmC0b0AcWDQ0"
+        },
+        {
+            "type": "sha512",
+            "password_hex": "70617373776f7264",
+            "salt": "$6$rounds=1000$short$",
+            "hash": "$6$rounds=1000$short$KnXV4Aykg9qZmumWP2Jve9F9ivecoaD2NjDNVPUkgLyK.iWGAcmffhpvv0aFpplg1Ae03CVETgqiiyQs7UUBC\/"
+        },
+        {
+            "type": "apr1",
+            "password_hex": "70617373776f7264",
+            "salt": "abcdefgh",
+            "hash": "$apr1$abcdefgh$FBwExRW4dCc8aL.OvjpIE1"
+        },
+        {
+            "type": "apr1",
+            "password_hex": "70617373776f7264",
+            "salt": "12345678",
+            "hash": "$apr1$12345678$9pHAGSBYtlmFtid2xxNog0"
+        },
+        {
+            "type": "apr1",
+            "password_hex": "61",
+            "salt": "abcdefgh",
+            "hash": "$apr1$abcdefgh$G8IsPsylW5ROvIKsQMRG61"
+        },
+        {
+            "type": "apr1",
+            "password_hex": "70c3a4737377c3b67264",
+            "salt": "abcdefgh",
+            "hash": "$apr1$abcdefgh$030j6I3f1zNCF9tihqdd11"
+        }
+    ],
+    "specials": {
+        "nthash": {
+            "70617373776f7264": "8846f7eaee8fb117ad06bdd830b7586c",
+            "61": "186cb09181e2c2ecaac768c47c729904",
+            "": "31d6cfe0d16ae931b73c59d7e0c089c0",
+            "70c3a4737377c3b67264": "0553152250ac01adb4213cb9938663e4",
+            "766572796c6f6e6770617373776f7264313233": "f50463aa9cdeb75262f98767f762c8b4"
+        },
+        "premysql41": {
+            "74657374": "378b243e220ca493",
+            "70617373776f7264": "5d2e19393cc5ef67",
+            "61": "60671c896665c3fa",
+            "": "5030573512345671",
+            "6c6f6e6765722070617373776f72642068657265": "1b04c96c0df3c2e1",
+            "70c3a4737377c3b67264": "4abeaead409936b7"
+        }
+    },
+    "argon2": {
+        "argon2id": "$argon2id$v=19$m=65536,t=4,p=1$dHZhTEJKWnFzd3dLNUZkbQ$Hrgf29xLAf7EJaC9mprYkCjZQtWcFRev2oWJNXQY5ak",
+        "argon2i": "$argon2i$v=19$m=65536,t=4,p=1$N05raFgxTU12YXh3REdtOA$1N9DWcau9CJY\/xm6jK7jhw9Rl8zugMHZjFuNdIHQO0g"
+    }
+}
