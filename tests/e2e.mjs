@@ -2,7 +2,7 @@
 // Starts the preview server if :4321 isn't already serving, launches chrome,
 // types a password, waits for the worker to compute, then reads back rendered
 // rows + a known hash and screenshots.
-import { spawn } from 'node:child_process'
+import { spawn, spawnSync } from 'node:child_process'
 import { mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -10,7 +10,17 @@ import { join } from 'node:path'
 // must match the `base` in astro.config.mjs (site is served under a subpath);
 // the trailing slash matters: relative URLs and the SW scope hang off it
 const BASE = (process.env.BASE_URL || 'http://localhost:4321/mkpasswd').replace(/\/?$/, '/')
-const CHROME = process.env.CHROME || 'google-chrome'
+
+// Resolve a Chrome/Chromium binary: honor $CHROME, else try the usual names.
+function findChrome() {
+  const names = [process.env.CHROME, 'google-chrome', 'google-chrome-stable', 'chromium', 'chromium-browser'].filter(Boolean)
+  for (const n of names) {
+    if (n.includes('/')) return n
+    if (spawnSync('which', [n]).status === 0) return n
+  }
+  return 'google-chrome'
+}
+const CHROME = findChrome()
 const userDir = mkdtempSync(join(tmpdir(), 'mkp-chrome-'))
 const port = 9333
 
@@ -30,14 +40,20 @@ if (!(await serverUp())) {
   if (!ok) { killPreview(); console.error('E2E error: preview server did not start'); process.exit(1) }
 }
 
+let chromeExited = null
 const chrome = spawn(CHROME, [
   '--headless=new', '--disable-gpu', '--no-sandbox', '--no-first-run',
+  '--disable-dev-shm-usage', // CI runners have a tiny /dev/shm; without this Chrome crashes
   `--remote-debugging-port=${port}`, `--user-data-dir=${userDir}`,
   '--window-size=1000,1400', 'about:blank',
 ], { stdio: 'ignore' })
+chrome.on('error', (e) => { chromeExited = `failed to spawn ${CHROME}: ${e.message}` })
+chrome.on('exit', (code) => { if (code) chromeExited = `chrome exited early (code ${code})` })
 
 async function getWsUrl() {
-  for (let i = 0; i < 50; i++) {
+  // cold CI runners can take several seconds to boot Chrome; poll up to ~20s
+  for (let i = 0; i < 200; i++) {
+    if (chromeExited) throw new Error(chromeExited)
     try {
       const list = await (await fetch(`http://localhost:${port}/json`)).json()
       const page = list.find((t) => t.type === 'page' && t.webSocketDebuggerUrl)
@@ -45,7 +61,7 @@ async function getWsUrl() {
     } catch {}
     await sleep(100)
   }
-  throw new Error('chrome CDP not reachable')
+  throw new Error(`chrome CDP not reachable (binary: ${CHROME})`)
 }
 
 function cdp(ws) {
