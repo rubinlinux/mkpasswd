@@ -1,23 +1,39 @@
 // Headless end-to-end check via the Chrome DevTools Protocol (no external deps).
-// Launches chrome against a running preview server, types a password, waits for
-// the worker to compute, then reads back rendered rows + a known hash and screenshots.
+// Starts the preview server if :4321 isn't already serving, launches chrome,
+// types a password, waits for the worker to compute, then reads back rendered
+// rows + a known hash and screenshots.
 import { spawn } from 'node:child_process'
 import { mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
-const BASE = process.env.BASE_URL || 'http://localhost:4321'
+// must match the `base` in astro.config.mjs (site is served under a subpath)
+const BASE = process.env.BASE_URL || 'http://localhost:4321/mkpasswd'
 const CHROME = process.env.CHROME || 'google-chrome'
 const userDir = mkdtempSync(join(tmpdir(), 'mkp-chrome-'))
 const port = 9333
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+
+async function serverUp() {
+  try { await fetch(BASE, { signal: AbortSignal.timeout(1000) }); return true } catch { return false }
+}
+
+let preview = null
+const killPreview = () => { if (preview) { try { process.kill(-preview.pid, 'SIGKILL') } catch {} } }
+if (!(await serverUp())) {
+  // detached → own process group, so killing -pid also takes down npm's astro child
+  preview = spawn('npm', ['run', 'preview'], { stdio: 'ignore', detached: true })
+  let ok = false
+  for (let i = 0; i < 100 && !ok; i++) { await sleep(200); ok = await serverUp() }
+  if (!ok) { killPreview(); console.error('E2E error: preview server did not start'); process.exit(1) }
+}
 
 const chrome = spawn(CHROME, [
   '--headless=new', '--disable-gpu', '--no-sandbox', '--no-first-run',
   `--remote-debugging-port=${port}`, `--user-data-dir=${userDir}`,
   '--window-size=1000,1400', 'about:blank',
 ], { stdio: 'ignore' })
-
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
 async function getWsUrl() {
   for (let i = 0; i < 50; i++) {
@@ -143,5 +159,6 @@ try {
   exitCode = 1
 } finally {
   chrome.kill('SIGKILL')
+  killPreview()
 }
 process.exit(exitCode)

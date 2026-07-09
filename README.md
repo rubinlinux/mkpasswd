@@ -34,7 +34,7 @@ formats.
 ```sh
 npm run vectors    # regenerate tests/*.json from PHP (needs php + openssl + python3)
 npm test           # 1205 digest/crypt/KDF vectors + 21 live-site wrapper vectors
-npm run test:e2e   # headless-Chrome check: types a password, reads rendered hashes
+npm run test:e2e   # headless-Chrome check (needs `npm run build` first; starts its own preview server)
 ```
 
 ### Implementation notes
