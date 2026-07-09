@@ -1,5 +1,7 @@
 # mkpasswd
 
+**⚡ Use it now: [rubinlinux.github.io/mkpasswd](https://rubinlinux.github.io/mkpasswd/)** — installable as an app, works offline.
+
 A modern, client-side reimagining of [mkpasswd.net](https://mkpasswd.net). Generate
 **115 kinds of password hashes** entirely in your browser — the password is never sent
 to a server, logged, or stored. Every algorithm runs locally in JavaScript and
