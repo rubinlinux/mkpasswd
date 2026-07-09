@@ -7,6 +7,9 @@ WebAssembly, off the main thread in a Web Worker.
 
 Built with **Astro + Vue 3 + Tailwind CSS v4**.
 
+> *Dedicated to Jobe of [mkpasswd.net](https://mkpasswd.net), whose original tool this
+> project reimagines and pays tribute to.*
+
 ## What's different from the original
 
 - **Nothing leaves your browser.** The original POSTed your password to a PHP backend;
