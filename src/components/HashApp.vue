@@ -3,6 +3,8 @@ import { ref, reactive, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import HashRow from './HashRow.vue'
 import { CATEGORIES, typesForCategory, typeMeta } from '../lib/registry.js'
 
+const logoUrl = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`
+
 const password = ref('')
 const reveal = ref(false)
 const category = ref('all')
@@ -15,21 +17,70 @@ const paramState = reactive({}) // type -> { key: value }
 const saltMemo = reactive({}) // type -> { salt, saltBytes }
 const expanded = reactive({}) // type -> bool
 const copied = ref(null)
+const shared = ref(null)
 const computing = ref(false)
 
 let worker = null
 let gen = 0
 let debounceTimer = null
 let copyTimer = null
+let shareTimer = null
 
 const categories = CATEGORIES.map((c) => ({
   ...c,
   count: typesForCategory(c.id).length,
 }))
 
+// --- URL #hash <-> filter state (shareable links) ---
+// #cat=<category>&q=<search> for filters; #<type-name> (or #type=<name>) pins
+// exactly that one type. Bare #<category> also works; where a bare token is
+// both a category and a type ("crypt", "sha1"), the category wins.
+const categoryIds = new Set(CATEGORIES.map((c) => c.id))
+const typeNames = new Set(typesForCategory('all'))
+const pinnedType = ref('')
+
+function applyHash() {
+  const raw = location.hash.slice(1)
+  let cat = 'all'
+  let q = ''
+  let pin = ''
+  if (raw.includes('=')) {
+    const params = new URLSearchParams(raw)
+    const c = params.get('cat')
+    if (c && categoryIds.has(c)) cat = c
+    q = (params.get('q') ?? '').trim()
+    const t = (params.get('type') ?? '').trim()
+    if (typeNames.has(t)) pin = t
+  } else if (raw) {
+    const token = decodeURIComponent(raw)
+    if (categoryIds.has(token)) cat = token
+    else if (typeNames.has(token)) pin = token
+  }
+  category.value = cat
+  query.value = q
+  pinnedType.value = pin
+}
+
+watch([category, query, pinnedType], () => {
+  let h = ''
+  if (pinnedType.value) {
+    h = '#' + pinnedType.value
+  } else {
+    const params = new URLSearchParams()
+    if (category.value !== 'all') params.set('cat', category.value)
+    const q = query.value.trim()
+    if (q) params.set('q', q)
+    const s = params.toString()
+    h = s ? '#' + s : ''
+  }
+  // replaceState: no history spam, and it never fires hashchange -> no loop
+  history.replaceState(null, '', location.pathname + location.search + h)
+})
+
 const activeBlurb = computed(() => categories.find((c) => c.id === category.value)?.blurb ?? '')
 
 const visibleTypes = computed(() => {
+  if (pinnedType.value) return [pinnedType.value]
   const base = typesForCategory(category.value)
   const q = query.value.trim().toLowerCase()
   if (!q) return base
@@ -97,6 +148,16 @@ async function copy(type) {
   } catch { /* clipboard blocked */ }
 }
 
+async function share(type) {
+  const url = `${location.origin}${location.pathname}${location.search}#${type}`
+  try {
+    await navigator.clipboard.writeText(url)
+    shared.value = type
+    clearTimeout(shareTimer)
+    shareTimer = setTimeout(() => (shared.value = null), 1400)
+  } catch { /* clipboard blocked */ }
+}
+
 function reroll(type) {
   delete saltMemo[type]
   delete results[type]
@@ -136,6 +197,7 @@ function clearAll() {
 function pickCategory(id) {
   category.value = id
   query.value = ''
+  pinnedType.value = ''
 }
 
 function toggleTheme() {
@@ -155,12 +217,16 @@ onMounted(() => {
   } catch {}
   worker = new Worker(new URL('../lib/worker.js', import.meta.url), { type: 'module' })
   worker.onmessage = onWorkerMessage
+  applyHash()
+  window.addEventListener('hashchange', applyHash)
 })
 
 onBeforeUnmount(() => {
   worker?.terminate()
   clearTimeout(debounceTimer)
   clearTimeout(copyTimer)
+  clearTimeout(shareTimer)
+  window.removeEventListener('hashchange', applyHash)
 })
 </script>
 
@@ -170,7 +236,7 @@ onBeforeUnmount(() => {
     <header class="flex items-start justify-between gap-4">
       <div>
         <div class="flex items-center gap-2.5">
-          <img src="/favicon.svg" alt="" class="h-9 w-9" aria-hidden="true" />
+          <img :src="logoUrl" alt="" class="h-9 w-9" aria-hidden="true" />
           <h1 class="text-2xl font-bold tracking-tight text-ink-50">mkpasswd</h1>
         </div>
         <p class="mt-1.5 max-w-lg text-sm text-ink-400">
@@ -250,6 +316,7 @@ onBeforeUnmount(() => {
         <input
           v-model="query" type="text" placeholder="Filter algorithms…"
           class="w-full rounded-lg border border-ink-800 bg-ink-900/40 py-2 pl-9 pr-3 text-sm text-ink-100 placeholder:text-ink-600 focus:border-brand-500/50 focus:outline-none"
+          @input="pinnedType = ''"
         />
       </div>
       <button
@@ -260,6 +327,15 @@ onBeforeUnmount(() => {
       >
         <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5" /></svg>
         Reroll salts
+      </button>
+      <button
+        v-if="pinnedType"
+        class="flex items-center gap-1.5 rounded-full border border-brand-500/60 bg-brand-500/15 px-3 py-1.5 text-xs font-medium text-brand-200 transition hover:bg-brand-500/25"
+        title="Show all types again"
+        @click="pickCategory('all')"
+      >
+        <span class="font-mono">{{ pinnedType }}</span>
+        <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
       </button>
       <span class="shrink-0 font-mono text-xs text-ink-600">
         <span v-if="computing" class="text-brand-400">computing…</span>
@@ -288,7 +364,8 @@ onBeforeUnmount(() => {
           :params="paramState[row.type] || {}"
           :expanded="!!expanded[row.type]"
           :copied="copied === row.type"
-          @copy="copy" @reroll="reroll" @toggle="toggle" @param="setParam"
+          :shared="shared === row.type"
+          @copy="copy" @reroll="reroll" @toggle="toggle" @param="setParam" @share="share"
         />
       </div>
     </div>

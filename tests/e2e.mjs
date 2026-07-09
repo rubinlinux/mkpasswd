@@ -88,17 +88,19 @@ try {
     }
   })
 
-  await send('Page.navigate', { url: BASE })
-  await sleep(1500) // hydrate + worker init
-
-  // type a password into the input
-  await evaluate(send, `(() => {
+  const TYPE_PASSWORD = `(() => {
     const el = document.querySelector('input[type=password], input[type=text]')
     const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set
     setter.call(el, 'password')
     el.dispatchEvent(new Event('input', { bubbles: true }))
     return true
-  })()`)
+  })()`
+
+  await send('Page.navigate', { url: BASE })
+  await sleep(1500) // hydrate + worker init
+
+  // type a password into the input
+  await evaluate(send, TYPE_PASSWORD)
 
   // wait for hashes to populate
   let count = 0
@@ -134,6 +136,15 @@ try {
     return { rowCount: rows.length, ldapMd5 }
   })()`)
 
+  // clicking a chip should be reflected in the URL hash (shareable link)
+  const hashAfterChip = await evaluate(send, 'location.hash')
+
+  // header logo must actually load (catches broken base-path asset URLs)
+  const logoOk = await evaluate(send, `(() => {
+    const img = document.querySelector('header img')
+    return !!img && img.complete && img.naturalWidth > 0
+  })()`)
+
   const shot = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true })
   writeFileSync('tests/e2e-ldap.png', Buffer.from(shot.data, 'base64'))
 
@@ -143,13 +154,33 @@ try {
   const shot2 = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true })
   writeFileSync('tests/e2e-screenshot.png', Buffer.from(shot2.data, 'base64'))
 
+  // deep link: loading #<type-name> pre-fills the filter to exactly that type
+  await send('Page.navigate', { url: `${BASE}#ldap-md5` })
+  await sleep(1500)
+  await evaluate(send, TYPE_PASSWORD)
+  let deep = { rowCount: 0, first: '' }
+  for (let i = 0; i < 20; i++) {
+    await sleep(250)
+    deep = await evaluate(send, `(() => {
+      const rows = [...document.querySelectorAll('.grid > div')]
+      return { rowCount: rows.length, first: rows[0]?.querySelector('code')?.textContent || '' }
+    })()`)
+    if (deep.rowCount) break
+  }
+
   console.log('all-category rows:', count, '| md5:', sampleMd5)
   console.log('ldap-category rows:', ldap.rowCount, '| ldap-md5:', ldap.ldapMd5)
+  console.log('hash after chip click:', hashAfterChip, '| logo loaded:', logoOk)
+  console.log('deep link #ldap-md5 rows:', deep.rowCount, '| first:', deep.first)
   console.log('console errors:', errors.length ? errors : 'none')
   const ok = sampleMd5 === '5f4dcc3b5aa765d61d8327deb882cf99'
     && count > 100
     && ldap.rowCount === 15
     && ldap.ldapMd5 === '{MD5}X03MO1qnZdYdgyfeuILPmQ=='
+    && hashAfterChip === '#cat=ldap'
+    && logoOk
+    && deep.rowCount === 1
+    && deep.first === 'ldap-md5'
     && errors.length === 0
   console.log(ok ? '\nE2E PASS' : '\nE2E FAIL')
   exitCode = ok ? 0 : 1

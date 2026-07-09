@@ -8,8 +8,9 @@ const props = defineProps({
   params: { type: Object, default: () => ({}) },
   expanded: { type: Boolean, default: false },
   copied: { type: Boolean, default: false },
+  shared: { type: Boolean, default: false },
 })
-const emit = defineEmits(['copy', 'reroll', 'toggle', 'param'])
+const emit = defineEmits(['copy', 'reroll', 'toggle', 'param', 'share'])
 
 const KIND_STYLE = {
   checksum: 'text-ink-300 bg-ink-800 ring-ink-700',
@@ -53,6 +54,18 @@ const configurable = computed(() => props.meta.salted || props.meta.params.lengt
         >
           <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="3" /><path d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6l2.1 2.1m0-12.8l-2.1 2.1M7.7 16.3l-2.1 2.1" />
+          </svg>
+        </button>
+        <button
+          class="rounded-md p-1.5 text-ink-500 transition hover:bg-ink-800 hover:text-ink-200"
+          title="Copy link to this type"
+          @click="emit('share', type)"
+        >
+          <svg v-if="!shared" viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7" />
+          </svg>
+          <svg v-else viewBox="0 0 24 24" class="h-4 w-4 text-brand-400" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 13l4 4L19 7" />
           </svg>
         </button>
         <button
