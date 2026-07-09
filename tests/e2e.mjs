@@ -7,8 +7,9 @@ import { mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
-// must match the `base` in astro.config.mjs (site is served under a subpath)
-const BASE = process.env.BASE_URL || 'http://localhost:4321/mkpasswd'
+// must match the `base` in astro.config.mjs (site is served under a subpath);
+// the trailing slash matters: relative URLs and the SW scope hang off it
+const BASE = (process.env.BASE_URL || 'http://localhost:4321/mkpasswd').replace(/\/?$/, '/')
 const CHROME = process.env.CHROME || 'google-chrome'
 const userDir = mkdtempSync(join(tmpdir(), 'mkp-chrome-'))
 const port = 9333
@@ -121,6 +122,17 @@ try {
     if (sampleMd5) break
   }
 
+  // PWA: manifest resolves and the service worker registers
+  let pwa = { sw: false, manifest: 0 }
+  for (let i = 0; i < 20 && !pwa.sw; i++) {
+    await sleep(250)
+    pwa = await evaluate(send, `(async () => {
+      const reg = await navigator.serviceWorker.getRegistration()
+      const manifest = await fetch(new URL('manifest.webmanifest', document.baseURI)).then((r) => r.status).catch(() => 0)
+      return { sw: !!reg, manifest }
+    })()`)
+  }
+
   // default sort is by strength: a memory-hard KDF tops the list
   const firstByStrength = await evaluate(send, `document.querySelector('.grid > div code')?.textContent || ''`)
 
@@ -189,6 +201,7 @@ try {
   console.log('ldap-category rows:', ldap.rowCount, '| ldap-md5:', ldap.ldapMd5)
   console.log('hash after chip click:', hashAfterChip, '| logo loaded:', logoOk)
   console.log('deep link #ldap-md5 rows:', deep.rowCount, '| first:', deep.first)
+  console.log('service worker registered:', pwa.sw, '| manifest status:', pwa.manifest)
   console.log('console errors:', errors.length ? errors : 'none')
   const ok = sampleMd5 === '5f4dcc3b5aa765d61d8327deb882cf99'
     && count > 100
@@ -200,6 +213,8 @@ try {
     && logoOk
     && deep.rowCount === 1
     && deep.first === 'ldap-md5'
+    && pwa.sw
+    && pwa.manifest === 200
     && errors.length === 0
   console.log(ok ? '\nE2E PASS' : '\nE2E FAIL')
   exitCode = ok ? 0 : 1
