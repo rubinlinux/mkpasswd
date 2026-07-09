@@ -141,6 +141,14 @@ if (match('argon2')) {
   }
 }
 
+// --- registry integrity: every type carries a strength score ------------------
+{
+  const { ALL_TYPES, TYPES } = await import('../src/lib/registry.js')
+  for (const t of ALL_TYPES) {
+    record('registry-strength', t, 'number', Number.isFinite(TYPES[t]?.strength) ? 'number' : String(TYPES[t]?.strength))
+  }
+}
+
 // --- report ------------------------------------------------------------------
 for (const f of failures.slice(0, 25)) {
   console.log(`FAIL ${f.name} [${f.id}]\n  want ${f.want}\n  got  ${f.got}`)

@@ -1,33 +1,89 @@
 @import 'tailwindcss';
 
+/*
+ * Default palette: light, warm white/beige after the original mkpasswd.net
+ * (#ece9d8 page, #aca899 borders, black text). The markup was written against
+ * a dark scale (ink-950 = page, ink-50 = text), so the light theme simply
+ * re-points every token; [data-theme="dark"] restores the dark values.
+ * Badge hues (amber/orange/sky/rose/emerald/teal *-300) are likewise
+ * re-pointed: 300-weight text only reads on dark, so light gets ~700-weight.
+ */
 @theme {
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
 
-  --color-ink-50: oklch(0.98 0.005 260);
-  --color-ink-100: oklch(0.95 0.008 260);
-  --color-ink-200: oklch(0.88 0.01 260);
-  --color-ink-300: oklch(0.78 0.014 260);
-  --color-ink-400: oklch(0.65 0.018 262);
-  --color-ink-500: oklch(0.55 0.02 264);
-  --color-ink-600: oklch(0.45 0.022 264);
-  --color-ink-700: oklch(0.36 0.024 265);
-  --color-ink-800: oklch(0.26 0.02 265);
-  --color-ink-850: oklch(0.21 0.018 266);
-  --color-ink-900: oklch(0.17 0.016 266);
-  --color-ink-950: oklch(0.13 0.014 267);
+  /* ink: inverted for light — 950 is the beige page, 50 is near-black text */
+  --color-ink-50: oklch(0.20 0.012 95);
+  --color-ink-100: oklch(0.25 0.014 95);
+  --color-ink-200: oklch(0.30 0.016 95);
+  --color-ink-300: oklch(0.36 0.018 95);
+  --color-ink-400: oklch(0.43 0.02 95);
+  --color-ink-500: oklch(0.50 0.022 96);
+  --color-ink-600: oklch(0.55 0.024 97);
+  --color-ink-700: oklch(0.73 0.028 98);
+  --color-ink-800: oklch(0.83 0.026 99);
+  --color-ink-850: oklch(0.89 0.024 100);
+  --color-ink-900: oklch(0.985 0.008 100);
+  --color-ink-950: oklch(0.932 0.022 100); /* ~#ece9d8 */
 
-  --color-brand-300: oklch(0.82 0.13 195);
-  --color-brand-400: oklch(0.76 0.15 194);
-  --color-brand-500: oklch(0.70 0.16 193);
-  --color-brand-600: oklch(0.62 0.15 193);
+  /* brand: deep teal, readable on beige */
+  --color-brand-200: oklch(0.38 0.08 196);
+  --color-brand-300: oklch(0.45 0.09 195);
+  --color-brand-400: oklch(0.51 0.10 194);
+  --color-brand-500: oklch(0.56 0.11 193);
+  --color-brand-600: oklch(0.48 0.11 193);
 
-  --color-accent-400: oklch(0.72 0.19 305);
-  --color-accent-500: oklch(0.64 0.21 302);
+  --color-accent-400: oklch(0.50 0.15 305);
+  --color-accent-500: oklch(0.55 0.16 302);
+
+  /* badge hues, darkened for light backgrounds */
+  --color-amber-300: oklch(0.55 0.13 70);
+  --color-orange-300: oklch(0.55 0.15 45);
+  --color-sky-300: oklch(0.50 0.11 235);
+  --color-rose-300: oklch(0.51 0.19 12);
+  --color-rose-400: oklch(0.55 0.20 14);
+  --color-emerald-300: oklch(0.50 0.12 165);
+  --color-teal-300: oklch(0.50 0.10 180);
+  --color-lime-300: oklch(0.55 0.13 125);
 }
 
 @layer base {
   :root {
+    color-scheme: light;
+  }
+  :root[data-theme='dark'] {
     color-scheme: dark;
+
+    --color-ink-50: oklch(0.98 0.005 260);
+    --color-ink-100: oklch(0.95 0.008 260);
+    --color-ink-200: oklch(0.88 0.01 260);
+    --color-ink-300: oklch(0.78 0.014 260);
+    --color-ink-400: oklch(0.65 0.018 262);
+    --color-ink-500: oklch(0.55 0.02 264);
+    --color-ink-600: oklch(0.45 0.022 264);
+    --color-ink-700: oklch(0.36 0.024 265);
+    --color-ink-800: oklch(0.26 0.02 265);
+    --color-ink-850: oklch(0.21 0.018 266);
+    --color-ink-900: oklch(0.17 0.016 266);
+    --color-ink-950: oklch(0.13 0.014 267);
+
+    --color-brand-200: oklch(0.87 0.11 196);
+    --color-brand-300: oklch(0.82 0.13 195);
+    --color-brand-400: oklch(0.76 0.15 194);
+    --color-brand-500: oklch(0.70 0.16 193);
+    --color-brand-600: oklch(0.62 0.15 193);
+
+    --color-accent-400: oklch(0.72 0.19 305);
+    --color-accent-500: oklch(0.64 0.21 302);
+
+    /* stock Tailwind 300-weight values, restored for dark */
+    --color-amber-300: oklch(0.879 0.169 91.605);
+    --color-orange-300: oklch(0.837 0.128 66.29);
+    --color-sky-300: oklch(0.828 0.111 230.318);
+    --color-rose-300: oklch(0.81 0.117 11.638);
+    --color-rose-400: oklch(0.712 0.194 13.428);
+    --color-emerald-300: oklch(0.845 0.143 164.978);
+    --color-teal-300: oklch(0.855 0.138 181.071);
+    --color-lime-300: oklch(0.897 0.196 126.665);
   }
   html {
     -webkit-text-size-adjust: 100%;
@@ -36,8 +92,8 @@
   body {
     @apply bg-ink-950 text-ink-100 antialiased;
     background-image:
-      radial-gradient(60rem 60rem at 15% -10%, color-mix(in oklch, var(--color-brand-500) 12%, transparent), transparent 60%),
-      radial-gradient(50rem 50rem at 100% 0%, color-mix(in oklch, var(--color-accent-500) 10%, transparent), transparent 55%);
+      radial-gradient(60rem 60rem at 15% -10%, color-mix(in oklch, var(--color-brand-500) 9%, transparent), transparent 60%),
+      radial-gradient(50rem 50rem at 100% 0%, color-mix(in oklch, var(--color-accent-500) 7%, transparent), transparent 55%);
     background-attachment: fixed;
   }
   ::selection {

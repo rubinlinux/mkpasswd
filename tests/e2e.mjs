@@ -121,6 +121,22 @@ try {
     if (sampleMd5) break
   }
 
+  // default sort is by strength: a memory-hard KDF tops the list
+  const firstByStrength = await evaluate(send, `document.querySelector('.grid > div code')?.textContent || ''`)
+
+  // clicking the "name" header re-sorts alphabetically
+  await evaluate(send, `(() => {
+    [...document.querySelectorAll('button')].find(b => b.textContent.trim().startsWith('name')).click(); return true
+  })()`)
+  await sleep(600)
+  const firstByName = await evaluate(send, `document.querySelector('.grid > div code')?.textContent || ''`)
+
+  // restore the default strength sort before the category checks
+  await evaluate(send, `(() => {
+    [...document.querySelectorAll('button')].find(b => b.textContent.trim().startsWith('strength')).click(); return true
+  })()`)
+  await sleep(600)
+
   // click the LDAP category chip and confirm the list filters down
   await evaluate(send, `(() => {
     const btn = [...document.querySelectorAll('button')].find(b => b.textContent.trim().startsWith('LDAP'))
@@ -169,12 +185,15 @@ try {
   }
 
   console.log('all-category rows:', count, '| md5:', sampleMd5)
+  console.log('first by strength:', firstByStrength, '| first by name:', firstByName)
   console.log('ldap-category rows:', ldap.rowCount, '| ldap-md5:', ldap.ldapMd5)
   console.log('hash after chip click:', hashAfterChip, '| logo loaded:', logoOk)
   console.log('deep link #ldap-md5 rows:', deep.rowCount, '| first:', deep.first)
   console.log('console errors:', errors.length ? errors : 'none')
   const ok = sampleMd5 === '5f4dcc3b5aa765d61d8327deb882cf99'
     && count > 100
+    && firstByStrength === 'argon2id'
+    && firstByName === 'adler32'
     && ldap.rowCount === 15
     && ldap.ldapMd5 === '{MD5}X03MO1qnZdYdgyfeuILPmQ=='
     && hashAfterChip === '#cat=ldap'

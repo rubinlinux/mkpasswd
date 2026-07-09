@@ -9,7 +9,7 @@ const password = ref('')
 const reveal = ref(false)
 const category = ref('all')
 const query = ref('')
-const theme = ref('dark')
+const theme = ref('light')
 
 const results = reactive({}) // type -> { value, salt, saltBytes, ms, error }
 const pending = reactive({}) // type -> bool
@@ -38,12 +38,15 @@ const categories = CATEGORIES.map((c) => ({
 const categoryIds = new Set(CATEGORIES.map((c) => c.id))
 const typeNames = new Set(typesForCategory('all'))
 const pinnedType = ref('')
+const sortMode = ref('best') // 'best' (strength, strongest first) | 'name'
+const sortAsc = ref(false)
 
 function applyHash() {
   const raw = location.hash.slice(1)
   let cat = 'all'
   let q = ''
   let pin = ''
+  let sort = null
   if (raw.includes('=')) {
     const params = new URLSearchParams(raw)
     const c = params.get('cat')
@@ -51,6 +54,7 @@ function applyHash() {
     q = (params.get('q') ?? '').trim()
     const t = (params.get('type') ?? '').trim()
     if (typeNames.has(t)) pin = t
+    sort = params.get('sort')
   } else if (raw) {
     const token = decodeURIComponent(raw)
     if (categoryIds.has(token)) cat = token
@@ -59,9 +63,11 @@ function applyHash() {
   category.value = cat
   query.value = q
   pinnedType.value = pin
+  sortMode.value = sort === 'name' || sort === 'name-desc' ? 'name' : 'best'
+  sortAsc.value = sort === 'name' || sort === 'best-asc'
 }
 
-watch([category, query, pinnedType], () => {
+watch([category, query, pinnedType, sortMode, sortAsc], () => {
   let h = ''
   if (pinnedType.value) {
     h = '#' + pinnedType.value
@@ -70,6 +76,8 @@ watch([category, query, pinnedType], () => {
     if (category.value !== 'all') params.set('cat', category.value)
     const q = query.value.trim()
     if (q) params.set('q', q)
+    if (sortMode.value === 'name') params.set('sort', sortAsc.value ? 'name' : 'name-desc')
+    else if (sortAsc.value) params.set('sort', 'best-asc')
     const s = params.toString()
     h = s ? '#' + s : ''
   }
@@ -79,12 +87,22 @@ watch([category, query, pinnedType], () => {
 
 const activeBlurb = computed(() => categories.find((c) => c.id === category.value)?.blurb ?? '')
 
+function setSort(mode) {
+  if (sortMode.value === mode) sortAsc.value = !sortAsc.value
+  else { sortMode.value = mode; sortAsc.value = mode === 'name' }
+}
+
 const visibleTypes = computed(() => {
   if (pinnedType.value) return [pinnedType.value]
   const base = typesForCategory(category.value)
   const q = query.value.trim().toLowerCase()
-  if (!q) return base
-  return base.filter((t) => t.toLowerCase().includes(q) || typeMeta(t).note.toLowerCase().includes(q))
+  const list = q
+    ? base.filter((t) => t.toLowerCase().includes(q) || typeMeta(t).note.toLowerCase().includes(q))
+    : [...base]
+  const dir = sortAsc.value ? 1 : -1
+  if (sortMode.value === 'name') list.sort((a, b) => a.localeCompare(b) * (sortAsc.value ? 1 : -1))
+  else list.sort((a, b) => (typeMeta(a).strength - typeMeta(b).strength) * dir || a.localeCompare(b))
+  return list
 })
 
 const rows = computed(() => visibleTypes.value.map((t) => ({ type: t, meta: typeMeta(t) })))
@@ -356,17 +374,33 @@ onBeforeUnmount(() => {
       <div v-else-if="rows.length === 0" class="rounded-2xl border border-dashed border-ink-800 py-16 text-center text-sm text-ink-500">
         No algorithms match “{{ query }}”.
       </div>
-      <div v-else class="grid gap-2.5">
-        <HashRow
-          v-for="row in rows" :key="row.type"
-          :type="row.type" :meta="row.meta"
-          :result="results[row.type]"
-          :params="paramState[row.type] || {}"
-          :expanded="!!expanded[row.type]"
-          :copied="copied === row.type"
-          :shared="shared === row.type"
-          @copy="copy" @reroll="reroll" @toggle="toggle" @param="setParam" @share="share"
-        />
+      <div v-else>
+        <div class="mb-1.5 flex items-center px-4 text-[10px] font-medium uppercase tracking-widest">
+          <button
+            class="flex items-center gap-1 transition"
+            :class="sortMode === 'name' ? 'text-brand-300' : 'text-ink-600 hover:text-ink-300'"
+            title="Sort alphabetically"
+            @click="setSort('name')"
+          >name<span v-if="sortMode === 'name'">{{ sortAsc ? '▲' : '▼' }}</span></button>
+          <button
+            class="ml-auto flex items-center gap-1 transition"
+            :class="sortMode === 'best' ? 'text-brand-300' : 'text-ink-600 hover:text-ink-300'"
+            title="Sort by resistance to password cracking"
+            @click="setSort('best')"
+          >strength<span v-if="sortMode === 'best'">{{ sortAsc ? '▲' : '▼' }}</span></button>
+        </div>
+        <div class="grid gap-2.5">
+          <HashRow
+            v-for="row in rows" :key="row.type"
+            :type="row.type" :meta="row.meta"
+            :result="results[row.type]"
+            :params="paramState[row.type] || {}"
+            :expanded="!!expanded[row.type]"
+            :copied="copied === row.type"
+            :shared="shared === row.type"
+            @copy="copy" @reroll="reroll" @toggle="toggle" @param="setParam" @share="share"
+          />
+        </div>
       </div>
     </div>
 

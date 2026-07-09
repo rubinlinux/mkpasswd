@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { strengthTier } from '../lib/registry.js'
 
 const props = defineProps({
   type: { type: String, required: true },
@@ -24,7 +25,17 @@ const KIND_STYLE = {
   special: 'text-ink-300 bg-ink-800 ring-ink-700',
 }
 
+const TIER_STYLE = {
+  strong: 'text-emerald-300 bg-emerald-500/10 ring-emerald-500/30',
+  good: 'text-teal-300 bg-teal-500/10 ring-teal-500/30',
+  fair: 'text-amber-300 bg-amber-500/10 ring-amber-500/30',
+  weak: 'text-orange-300 bg-orange-500/10 ring-orange-500/30',
+  none: 'text-rose-300 bg-rose-500/10 ring-rose-500/30',
+}
+
 const badgeClass = computed(() => KIND_STYLE[props.meta.kind] ?? KIND_STYLE.digest)
+const tier = computed(() => strengthTier(props.meta.strength ?? 0))
+const tierClass = computed(() => TIER_STYLE[tier.value])
 const hasValue = computed(() => props.result && props.result.value !== undefined && !props.result.error)
 const isEmptyString = computed(() => hasValue.value && props.result.value === '')
 const configurable = computed(() => props.meta.salted || props.meta.params.length > 0)
@@ -44,6 +55,11 @@ const configurable = computed(() => props.meta.salted || props.meta.params.lengt
       <span v-if="meta.bits" class="shrink-0 font-mono text-[10px] text-ink-500">{{ meta.bits }}-bit</span>
 
       <div class="ml-auto flex shrink-0 items-center gap-1">
+        <span
+          class="mr-1 rounded-md px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wide ring-1 ring-inset"
+          :class="tierClass"
+          :title="`Resistance to offline password cracking: ${meta.strength ?? 0}/100`"
+        >{{ tier }}</span>
         <span v-if="result && result.ms > 40" class="mr-1 font-mono text-[10px] text-ink-600">{{ result.ms }}ms</span>
         <button
           v-if="configurable"

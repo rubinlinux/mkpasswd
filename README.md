@@ -15,6 +15,13 @@ Built with **Astro + Vue 3 + Tailwind CSS v4**.
   hash list filters live. Type a password once and see every hash update instantly.
 - **Tunable & salted schemes are interactive.** bcrypt cost, Argon2 memory/time/threads,
   SHA-crypt rounds are sliders; salted schemes show their salt with a one-click reroll.
+- **Strength at a glance.** Every type is rated for resistance to offline password
+  cracking (work factor, salting, primitive health) and the list sorts strongest-first
+  by default — click the name/strength column headers to re-sort.
+- **Shareable links.** Filters live in the URL hash (`#cat=ldap`, `#q=sha`), and each
+  row has a link button that copies a direct `#<type>` permalink.
+- **Familiar looks, modern skin.** Light white/beige palette after the original site,
+  with the dark theme one toggle away.
 
 ## Develop
 

@@ -235,6 +235,68 @@ Object.assign(TYPES, {
   'unreal-sha1': meta('irc', 'UnrealIRCd salted SHA-1.', { salted: true, deterministic: false }),
 })
 
+// ---- strength: resistance to offline password cracking ----------------------
+// 0-100, judged on work factor (iterations, memory hardness), salting, and the
+// state of the underlying primitive. This ranks suitability for *password
+// storage*, not general cryptographic quality — SHA-256 is a fine hash but a
+// poor password store (unsalted and GPU-fast).
+function setStrength(score, types) {
+  for (const t of types) TYPES[t].strength = score
+}
+
+setStrength(95, ['argon2id'])                                    // memory-hard, tunable, current best practice
+setStrength(93, ['argon2i'])                                     // memory-hard, data-independent variant
+setStrength(90, ['unreal-argon2', 'unreal-argon2id'])            // argon2id with modest fixed params (m=6144)
+setStrength(85, ['bcrypt', 'crypt-blowfish', 'crypt-blowfish-2a', 'crypt-blowfish-2y',
+  'ldap-crypt-blowfish', 'openldap-crypt-blowfish', 'apache-bcrypt'])
+setStrength(84, ['unreal-bcrypt'])
+setStrength(80, ['crypt-blowfish-2x'])                           // bcrypt with the 1997 sign-extension bug
+setStrength(75, ['crypt-sha512', 'apache-sha512'])               // salted, iterated, CPU-hard (not memory-hard)
+setStrength(72, ['crypt-sha256', 'apache-sha256'])
+setStrength(55, ['crypt-md5', 'apache-md5', 'ldap-crypt-md5', 'openldap-crypt-md5']) // salted, 1000 rounds, but MD5 core
+setStrength(52, ['ircu-smd5'])                                   // md5crypt with a 2-char salt
+setStrength(48, ['ldap-ssha512'])                                // salted but single-pass -> GPU-fast
+setStrength(47, ['ldap-ssha384'])
+setStrength(46, ['ldap-ssha256'])
+setStrength(42, ['crypt-ext', 'ldap-crypt-ext', 'openldap-crypt-ext']) // iterated but DES-based
+setStrength(41, ['unreal-ripemd160'])
+setStrength(40, ['ldap-ssha', 'openldap-ssha', 'unreal-sha1'])   // salted SHA-1, single-ish pass
+setStrength(35, ['ldap-smd5', 'openldap-smd5', 'unreal-md5'])    // salted MD5, single-ish pass
+setStrength(30, ['sha3-512', 'sha3-384', 'sha512', 'sha384', 'ldap-sha512', 'ldap-sha384']) // sound but unsalted + fast
+setStrength(29, ['sha3-256', 'sha256', 'sha512/256', 'whirlpool', 'ldap-sha256'])
+setStrength(28, ['sha3-224', 'sha224', 'sha512/224'])
+setStrength(25, ['ripemd160', 'ripemd256', 'ripemd320', 'gost', 'gost-crypto'])
+setStrength(24, ['ripemd128', 'snefru', 'snefru256'])
+for (const w of [128, 160, 192]) {
+  setStrength(24, [`tiger${w},4`])
+  setStrength(23, [`tiger${w},3`])
+}
+for (const w of [128, 160, 192, 224, 256]) {
+  setStrength(21, [`haval${w},5`])                               // reduced-pass HAVAL has known collisions
+  setStrength(19, [`haval${w},4`])
+  setStrength(17, [`haval${w},3`])
+}
+setStrength(20, ['sha1', 'apache-sha', 'ldap-sha', 'openldap-sha']) // collision-broken, unsalted
+setStrength(15, ['crypt', 'apache-crypt', 'unreal-crypt', 'ldap-crypt', 'openldap-crypt']) // DES: 8-char cap, 12-bit salt
+setStrength(12, ['md5', 'ldap-md5', 'openldap-md5'])
+setStrength(10, ['md4'])
+setStrength(9, ['md2'])
+setStrength(8, ['crypt-nthash'])                                 // unsalted MD4, pass-the-hash
+setStrength(4, ['premysql41'])                                   // 64-bit, trivially cracked
+setStrength(3, ['adler32', 'crc32', 'crc32b', 'crc32c', 'fnv132', 'fnv164', 'fnv1a32', 'fnv1a64',
+  'joaat', 'murmur3a', 'murmur3c', 'murmur3f', 'xxh32', 'xxh64', 'xxh3', 'xxh128'])  // not cryptographic
+setStrength(0, ['plain', 'ircu-plain', 'ldap-cleartext', 'openldap-cleartext', 'null'])
+
+// Coarse tier for display; thresholds chosen so "strong" = real KDFs,
+// "good" = iterated crypt schemes, "fair" = salted-but-fast, the rest weak/none.
+export function strengthTier(score) {
+  if (score >= 80) return 'strong'
+  if (score >= 60) return 'good'
+  if (score >= 35) return 'fair'
+  if (score >= 5) return 'weak'
+  return 'none'
+}
+
 // Human labels for each badge kind.
 export const KIND_LABEL = {
   checksum: 'checksum',
