@@ -410,6 +410,11 @@ onBeforeUnmount(() => {
         All hashing happens in your browser via JavaScript &amp; WebAssembly. No network requests, no logging.
       </p>
       <p class="mt-1">A modern reimagining of mkpasswd.net — {{ categories.find(c => c.id === 'all')?.count }} hash types, zero server round-trips.</p>
+      <p class="mt-1">
+        <a href="https://github.com/rubinlinux/mkpasswd" class="text-brand-400 transition hover:text-brand-300" rel="noopener">Source on GitHub</a>
+        <span class="mx-1.5 opacity-60">·</span>
+        <a href="https://www.gnu.org/licenses/gpl-3.0.html" class="text-brand-400 transition hover:text-brand-300" rel="noopener">GPL-3.0</a>
+      </p>
     </footer>
   </div>
 </template>

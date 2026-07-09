@@ -80,3 +80,7 @@ src/
 tests/                        PHP vector generator + node verifiers + e2e
 reference/                    original site snapshot + reverse-engineered specs
 ```
+
+## License
+
+[GPL-3.0-or-later](LICENSE).
