@@ -3,7 +3,7 @@
 **⚡ Use it now: [rubinlinux.github.io/mkpasswd](https://rubinlinux.github.io/mkpasswd/)** — installable as an app, works offline.
 
 A modern, client-side reimagining of [mkpasswd.net](https://mkpasswd.net). Generate
-**115 kinds of password hashes** entirely in your browser — the password is never sent
+**118 kinds of password hashes** entirely in your browser — the password is never sent
 to a server, logged, or stored. Every algorithm runs locally in JavaScript and
 WebAssembly, off the main thread in a Web Worker.
 
@@ -18,13 +18,24 @@ Built with **Astro + Vue 3 + Tailwind CSS v4**.
   this computes everything client-side.
 - **Category-first UI.** Pick a category chip (LDAP, Apache, crypt(), SHA, …) and the
   hash list filters live. Type a password once and see every hash update instantly.
-- **Tunable & salted schemes are interactive.** bcrypt cost, Argon2 memory/time/threads,
-  SHA-crypt rounds are sliders; salted schemes show their salt with a one-click reroll.
+- **Tunable & salted schemes are interactive.** bcrypt cost, Argon2/scrypt memory·time·
+  threads, PBKDF2/SHA-crypt rounds are sliders; salted schemes show their salt with a
+  one-click reroll.
+- **Identify & verify.** Paste an unknown hash and mkpasswd ranks the formats it matches
+  ($2y$ → bcrypt, {SSHA} → salted SHA-1, a bare 32-char hex → MD5/RIPEMD-128/…). Add a
+  password and it recomputes with the embedded salt/params to tell you if it matches.
+- **Hash anatomy.** Expand any structured hash to see its parts color-coded — scheme
+  prefix, cost/rounds, salt, digest — with a legend.
+- **Copy as config line.** One click yields the exact line a system expects: an
+  `.htpasswd` entry, an LDIF `userPassword` change, or an `/etc/shadow` field.
 - **Strength at a glance.** Every type is rated for resistance to offline password
   cracking (work factor, salting, primitive health) and the list sorts strongest-first
-  by default — click the name/strength column headers to re-sort.
+  by default — click the name/strength column headers to re-sort. The tooltip gives a
+  concrete single-GPU crack-time estimate.
 - **Shareable links.** Filters live in the URL hash (`#cat=ldap`, `#q=sha`), and each
   row has a link button that copies a direct `#<type>` permalink.
+- **Install it / use it offline.** A service worker precaches the whole app; add it to
+  your home screen or dock and it runs with no network at all.
 - **Familiar looks, modern skin.** Light white/beige palette after the original site,
   with the dark theme one toggle away.
 
@@ -45,14 +56,24 @@ formats.
 
 ```sh
 npm run vectors    # regenerate tests/*.json from PHP (needs php + openssl + python3)
-npm test           # 1205 digest/crypt/KDF vectors + 21 live-site wrapper vectors
+npm test           # PHP/crypt/KDF vectors + live-site wrappers + identify/verify round-trip
 npm run test:e2e   # headless-Chrome check (needs `npm run build` first; starts its own preview server)
 ```
+
+`npm test` runs three suites: the PHP-derived digest/crypt/KDF vectors (scrypt and PBKDF2
+are additionally cross-checked against Node's `crypto`), the 21 live-site wrapper vectors,
+and a round-trip that hashes every type then confirms `identify()` recognizes it and
+`verify()` accepts the right password and rejects a wrong one. All three run in CI before
+each deploy.
+
+Tested in Chrome (full end-to-end) and Firefox (render + Vue hydration confirmed; the
+WASM/worker hashing path is standard and browser-agnostic).
 
 ### Implementation notes
 
 - WASM-backed hashes (`hash-wasm`): MD4/5, SHA-1/2/3, RIPEMD-160, Whirlpool, xxHash,
-  CRC, Adler-32, bcrypt, Argon2i/id.
+  CRC, Adler-32, bcrypt, Argon2i/id, scrypt. PBKDF2 uses the native WebCrypto
+  implementation.
 - Hand-ported to JS (verified against php-src): Tiger, GOST (test + CryptoPro), Snefru,
   HAVAL (15 variants), MD2, RIPEMD-128/256/320, SHA-512/224+256, the full `crypt()`
   family (DES, BSDi ext-DES, md5crypt/apr1, sha256/512-crypt), FNV, Murmur3, JOAAT,
@@ -73,8 +94,12 @@ src/
   components/HashApp.vue      app shell: password, category chips, worker client
   components/HashRow.vue      one hash row (value, copy, salt, param sliders)
   lib/
-    registry.js              category map + per-type metadata (drives UI + dispatch)
+    registry.js              category map + per-type metadata, strength + crack-rate
     hashers.js               compute(type, password, opts) dispatch
+    identify.js              hash string -> ranked candidate types
+    verify.js                (type, hash, password) -> match? (extracts salt/params)
+    anatomy.js               split a hash into color-coded segments
+    configlines.js           .htpasswd / LDIF / shadow line builders
     digests.js               PHP hash() name -> hex function map
     kdf.js  b64.js  worker.js
     algos/                   tiger, gost, snefru, haval, md2, ripemd, murmur3, …

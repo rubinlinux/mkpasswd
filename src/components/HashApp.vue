@@ -2,6 +2,7 @@
 import { ref, reactive, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import HashRow from './HashRow.vue'
 import { CATEGORIES, typesForCategory, typeMeta } from '../lib/registry.js'
+import { identify } from '../lib/identify.js'
 
 const logoUrl = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`
 
@@ -20,11 +21,21 @@ const copied = ref(null)
 const shared = ref(null)
 const computing = ref(false)
 
+// --- identify / verify tool -------------------------------------------------
+const tool = ref('generate') // 'generate' | 'identify'
+const idHash = ref('')
+const idPassword = ref('')
+const verdicts = reactive({}) // type -> true | false | null (unverifiable)
+
+const candidates = computed(() => identify(idHash.value))
+
 let worker = null
 let gen = 0
+let verifyId = 0
 let debounceTimer = null
 let copyTimer = null
 let shareTimer = null
+let verifyTimer = null
 
 const categories = CATEGORIES.map((c) => ({
   ...c,
@@ -146,6 +157,10 @@ function runCompute() {
 
 function onWorkerMessage(e) {
   const msg = e.data
+  if (msg.kind === 'verify-result') {
+    if (msg.id === verifyId) verdicts[msg.type] = msg.match
+    return
+  }
   if (msg.gen !== gen) return
   if (msg.kind === 'done') { computing.value = false; return }
   if (msg.kind !== 'result') return
@@ -153,6 +168,28 @@ function onWorkerMessage(e) {
   results[type] = { value, salt, saltBytes, ms, error }
   pending[type] = false
   if ((salt || saltBytes) && !saltMemo[type]) saltMemo[type] = { salt, saltBytes }
+}
+
+function scheduleVerify() {
+  clearTimeout(verifyTimer)
+  verifyTimer = setTimeout(runVerify, 200)
+}
+
+function runVerify() {
+  if (!worker) return
+  verifyId++
+  for (const k of Object.keys(verdicts)) delete verdicts[k]
+  const cands = candidates.value.map((c) => c.type)
+  if (!cands.length || idPassword.value === '') return
+  worker.postMessage({ kind: 'verify', id: verifyId, hash: idHash.value.trim(), password: idPassword.value, candidates: cands })
+}
+
+function useIdentifiedType(type) {
+  tool.value = 'generate'
+  pinnedType.value = type
+  category.value = 'all'
+  query.value = ''
+  if (idPassword.value) password.value = idPassword.value
 }
 
 async function copy(type) {
@@ -227,6 +264,7 @@ function toggleTheme() {
 
 watch([password, category, query], schedule)
 watch(visibleTypes, schedule)
+watch([idHash, idPassword], scheduleVerify)
 
 onMounted(() => {
   try {
@@ -244,6 +282,7 @@ onBeforeUnmount(() => {
   clearTimeout(debounceTimer)
   clearTimeout(copyTimer)
   clearTimeout(shareTimer)
+  clearTimeout(verifyTimer)
   window.removeEventListener('hashchange', applyHash)
 })
 </script>
@@ -264,7 +303,7 @@ onBeforeUnmount(() => {
       </div>
       <button
         class="shrink-0 rounded-lg border border-ink-800 bg-ink-900/60 p-2 text-ink-400 transition hover:text-ink-100"
-        title="Toggle theme"
+        title="Toggle theme" :aria-label="`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`"
         @click="toggleTheme"
       >
         <svg v-if="theme === 'dark'" viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2">
@@ -276,6 +315,81 @@ onBeforeUnmount(() => {
       </button>
     </header>
 
+    <!-- Tool toggle: generate hashes vs. identify/verify an existing one -->
+    <div class="flex gap-1 self-start rounded-lg border border-ink-800 bg-ink-900/40 p-1 text-sm font-medium">
+      <button
+        class="rounded-md px-3 py-1.5 transition"
+        :class="tool === 'generate' ? 'bg-brand-500/15 text-brand-200' : 'text-ink-400 hover:text-ink-100'"
+        @click="tool = 'generate'"
+      >Generate</button>
+      <button
+        class="rounded-md px-3 py-1.5 transition"
+        :class="tool === 'identify' ? 'bg-brand-500/15 text-brand-200' : 'text-ink-400 hover:text-ink-100'"
+        @click="tool = 'identify'"
+      >Identify &amp; verify</button>
+    </div>
+
+    <!-- ============================ IDENTIFY MODE ============================ -->
+    <template v-if="tool === 'identify'">
+      <div class="rounded-2xl border border-ink-800 bg-ink-900/50 p-4 shadow-xl shadow-black/20 backdrop-blur">
+        <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-ink-500">Paste a hash</label>
+        <textarea
+          v-model="idHash" rows="2"
+          placeholder="$2y$10$… or {SSHA}… or a bare hex digest"
+          aria-label="Hash to identify"
+          autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
+          class="w-full resize-y rounded-lg border border-ink-800 bg-ink-950/40 px-3 py-2 font-mono text-sm text-ink-50 placeholder:text-ink-600 focus:border-brand-500/50 focus:outline-none"
+        ></textarea>
+        <label class="mt-3 mb-1.5 block text-xs font-medium uppercase tracking-wide text-ink-500">Password to check <span class="text-ink-600 normal-case">(optional)</span></label>
+        <input
+          v-model="idPassword" type="text"
+          placeholder="Leave blank to just identify the format"
+          aria-label="Password to verify against the hash"
+          autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
+          class="w-full rounded-lg border border-ink-800 bg-ink-950/40 px-3 py-2 font-mono text-sm text-ink-50 placeholder:text-ink-600 focus:border-brand-500/50 focus:outline-none"
+        />
+      </div>
+
+      <div class="flex-1">
+        <div v-if="!idHash.trim()" class="rounded-2xl border border-dashed border-ink-800 py-16 text-center text-sm text-ink-500">
+          Paste a hash above to identify its format.
+        </div>
+        <div v-else-if="candidates.length === 0" class="rounded-2xl border border-dashed border-ink-800 py-16 text-center text-sm text-ink-500">
+          Unrecognized format — no known hash type matches this string.
+        </div>
+        <div v-else>
+          <p class="mb-2 text-xs text-ink-600">
+            {{ candidates.length }} candidate {{ candidates.length === 1 ? 'type' : 'types' }}
+            <span v-if="idPassword"> · green = this password matches</span>
+          </p>
+          <div class="grid gap-2">
+            <div
+              v-for="c in candidates" :key="c.type"
+              class="flex items-center gap-3 rounded-xl border px-4 py-3 transition"
+              :class="verdicts[c.type] === true
+                ? 'border-emerald-500/50 bg-emerald-500/5'
+                : verdicts[c.type] === false ? 'border-ink-800/80 bg-ink-900/20 opacity-60' : 'border-ink-800/80 bg-ink-900/40'"
+            >
+              <code class="font-mono text-sm font-medium text-ink-100">{{ c.type }}</code>
+              <span v-if="!c.exact" class="rounded px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-ink-500 ring-1 ring-inset ring-ink-700">guess</span>
+              <span class="min-w-0 flex-1 truncate text-xs text-ink-500">{{ c.reason }}</span>
+              <span v-if="idPassword && verdicts[c.type] === true" class="shrink-0 text-xs font-semibold text-emerald-400">✓ match</span>
+              <span v-else-if="idPassword && verdicts[c.type] === false" class="shrink-0 text-xs text-ink-600">no match</span>
+              <span v-else-if="idPassword && verdicts[c.type] === null" class="shrink-0 text-xs text-ink-600">n/a</span>
+              <span v-else-if="idPassword" class="shrink-0 text-xs text-brand-400">checking…</span>
+              <button
+                class="shrink-0 rounded-md px-2 py-1 text-[11px] font-medium text-brand-400 ring-1 ring-brand-500/30 transition hover:bg-brand-500/10"
+                title="Open this type in the generator"
+                @click="useIdentifiedType(c.type)"
+              >Open</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- ============================ GENERATE MODE =========================== -->
+    <template v-else>
     <!-- Password input -->
     <div class="rounded-2xl border border-ink-800 bg-ink-900/50 p-1.5 shadow-xl shadow-black/20 backdrop-blur">
       <div class="flex items-center gap-1.5">
@@ -288,10 +402,11 @@ onBeforeUnmount(() => {
           :type="reveal ? 'text' : 'password'"
           v-model="password"
           placeholder="Type a password to hash…"
+          aria-label="Password to hash"
           autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
           class="min-w-0 flex-1 bg-transparent px-2 py-3 font-mono text-base text-ink-50 placeholder:text-ink-600 focus:outline-none"
         />
-        <button class="rounded-lg p-2 text-ink-500 transition hover:text-ink-200" :title="reveal ? 'Hide' : 'Show'" @click="reveal = !reveal">
+        <button class="rounded-lg p-2 text-ink-500 transition hover:text-ink-200" :title="reveal ? 'Hide' : 'Show'" :aria-label="reveal ? 'Hide password' : 'Show password'" @click="reveal = !reveal">
           <svg v-if="!reveal" viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" /><circle cx="12" cy="12" r="3" />
           </svg>
@@ -299,12 +414,12 @@ onBeforeUnmount(() => {
             <path d="M3 3l18 18M10.6 10.6a3 3 0 0 0 4.2 4.2M9.9 5.2A9.5 9.5 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4M6.3 6.3A17 17 0 0 0 2 12s3.5 7 10 7a9.7 9.7 0 0 0 2.1-.2" />
           </svg>
         </button>
-        <button class="rounded-lg p-2 text-ink-500 transition hover:text-ink-200" title="Generate random password" @click="randomPassword">
+        <button class="rounded-lg p-2 text-ink-500 transition hover:text-ink-200" title="Generate random password" aria-label="Generate random password" @click="randomPassword">
           <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="3" y="3" width="18" height="18" rx="3" /><circle cx="8" cy="8" r="1.2" fill="currentColor" /><circle cx="16" cy="16" r="1.2" fill="currentColor" /><circle cx="16" cy="8" r="1.2" fill="currentColor" /><circle cx="8" cy="16" r="1.2" fill="currentColor" />
           </svg>
         </button>
-        <button v-if="password" class="mr-1 rounded-lg p-2 text-ink-500 transition hover:text-ink-200" title="Clear" @click="clearAll">
+        <button v-if="password" class="mr-1 rounded-lg p-2 text-ink-500 transition hover:text-ink-200" title="Clear" aria-label="Clear password" @click="clearAll">
           <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
         </button>
       </div>
@@ -318,6 +433,8 @@ onBeforeUnmount(() => {
         :class="category === c.id
           ? 'border-brand-500/60 bg-brand-500/15 text-brand-200'
           : 'border-ink-800 bg-ink-900/40 text-ink-400 hover:border-ink-700 hover:text-ink-200'"
+        :aria-pressed="category === c.id"
+        :aria-label="`${c.label} category, ${c.count} types`"
         @click="pickCategory(c.id)"
       >
         {{ c.label }}
@@ -333,6 +450,7 @@ onBeforeUnmount(() => {
         </svg>
         <input
           v-model="query" type="text" placeholder="Filter algorithms…"
+          aria-label="Filter algorithms by name or description"
           class="w-full rounded-lg border border-ink-800 bg-ink-900/40 py-2 pl-9 pr-3 text-sm text-ink-100 placeholder:text-ink-600 focus:border-brand-500/50 focus:outline-none"
           @input="pinnedType = ''"
         />
@@ -355,7 +473,7 @@ onBeforeUnmount(() => {
         <span class="font-mono">{{ pinnedType }}</span>
         <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
       </button>
-      <span class="shrink-0 font-mono text-xs text-ink-600">
+      <span class="shrink-0 font-mono text-xs text-ink-600" role="status" aria-live="polite" :aria-busy="computing">
         <span v-if="computing" class="text-brand-400">computing…</span>
         <span v-else>{{ rows.length }} {{ rows.length === 1 ? 'type' : 'types' }}</span>
       </span>
@@ -403,6 +521,7 @@ onBeforeUnmount(() => {
         </div>
       </div>
     </div>
+    </template>
 
     <!-- Footer -->
     <footer class="mt-4 border-t border-ink-800/60 pt-6 text-center text-xs text-ink-600">

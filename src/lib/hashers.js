@@ -7,7 +7,7 @@ import { digestHex } from './digests.js'
 import { desCrypt, extDesCrypt } from './crypt/descrypt.js'
 import { md5Crypt } from './crypt/md5crypt.js'
 import { sha256Crypt, sha512Crypt } from './crypt/shacrypt.js'
-import { bcryptHash, argon2Hash, randomBytes } from './kdf.js'
+import { bcryptHash, argon2Hash, scryptHash, pbkdf2Hash, randomBytes } from './kdf.js'
 import { nthash, premysql41 } from './algos/misc.js'
 import { bytesToB64, hexToBytes, concatBytes } from './b64.js'
 
@@ -110,6 +110,26 @@ export async function compute(type, password, opts = {}) {
       return bcryptVariant(data, '2a', P, opts)
     case 'crypt-blowfish-2x':
       return bcryptVariant(data, '2x', P, opts)
+
+    // scrypt / PBKDF2 ------------------------------------------------------
+    case 'scrypt': {
+      const r = await scryptHash(data, {
+        ln: clamp(P.ln ?? 15, 10, 17),
+        r: clamp(P.r ?? 8, 1, 16),
+        p: clamp(P.p ?? 1, 1, 8),
+        salt: opts.saltBytes,
+      })
+      return { value: r.value, saltBytes: r.salt }
+    }
+    case 'pbkdf2-sha256':
+    case 'pbkdf2-sha512': {
+      const r = await pbkdf2Hash(data, {
+        digest: type === 'pbkdf2-sha512' ? 'SHA-512' : 'SHA-256',
+        iterations: clamp(P.iterations ?? 600000, 1000, 5000000),
+        salt: opts.saltBytes,
+      })
+      return { value: r.value, saltBytes: r.salt }
+    }
 
     // argon2 -------------------------------------------------------------
     case 'argon2i':

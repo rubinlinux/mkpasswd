@@ -1,7 +1,9 @@
-// Password-based KDFs backed by hash-wasm (bcrypt, argon2). These return the
-// standard crypt-style encoded strings, matching PHP's crypt()/password_hash().
+// Password-based KDFs backed by hash-wasm (bcrypt, argon2, scrypt) and
+// WebCrypto (PBKDF2). These return standard crypt-style / PHC-style encoded
+// strings, matching PHP's crypt()/password_hash() where applicable.
 
-import { bcrypt, argon2i, argon2id } from 'hash-wasm'
+import { bcrypt, argon2i, argon2id, scrypt } from 'hash-wasm'
+import { bytesToB64, hexToBytes } from './b64.js'
 
 const BCRYPT_B64 = './ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
 
@@ -61,6 +63,37 @@ export async function bcryptHash(password, { cost = 10, variant = '2y', salt } =
   })
   // hash-wasm emits $2b$; relabel to the requested variant (2a/2x/2y share output for 7-bit input).
   return { value: encoded.replace(/^\$2[abxy]\$/, `$${variant}$`), salt: saltBytes }
+}
+
+// PHC-style scrypt string: $scrypt$ln=15,r=8,p=1$<B64 salt>$<B64 hash>
+// (B64 = standard base64 alphabet, no padding, per the PHC string format.)
+export async function scryptHash(password, { ln = 15, r = 8, p = 1, salt } = {}) {
+  const saltBytes = salt ?? randomBytes(16)
+  const hex = await scrypt({
+    password,
+    salt: saltBytes,
+    costFactor: 2 ** ln,
+    blockSize: r,
+    parallelism: p,
+    hashLength: 32,
+    outputType: 'hex',
+  })
+  const b64 = (b) => bytesToB64(b, { pad: false })
+  return { value: `$scrypt$ln=${ln},r=${r},p=${p}$${b64(saltBytes)}$${b64(hexToBytes(hex))}`, salt: saltBytes }
+}
+
+// PHC-style PBKDF2 string: $pbkdf2-sha256$i=600000$<B64 salt>$<B64 hash>
+export async function pbkdf2Hash(password, { digest = 'SHA-256', iterations = 600000, salt } = {}) {
+  const saltBytes = salt ?? randomBytes(16)
+  const key = await crypto.subtle.importKey('raw', password, 'PBKDF2', false, ['deriveBits'])
+  const bits = await crypto.subtle.deriveBits(
+    { name: 'PBKDF2', hash: digest, salt: saltBytes, iterations },
+    key,
+    digest === 'SHA-512' ? 512 : 256,
+  )
+  const tag = digest === 'SHA-512' ? 'pbkdf2-sha512' : 'pbkdf2-sha256'
+  const b64 = (b) => bytesToB64(b, { pad: false })
+  return { value: `$${tag}$i=${iterations}$${b64(saltBytes)}$${b64(new Uint8Array(bits))}`, salt: saltBytes }
 }
 
 export async function argon2Hash(password, {

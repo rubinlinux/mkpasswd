@@ -8,6 +8,7 @@ export const CATEGORIES = [
   { id: 'crypt', label: 'crypt()', blurb: 'Unix crypt(3) password schemes.' },
   { id: 'php_password_hash', label: 'password_hash()', blurb: 'PHP password_hash() — modern, salted, tunable.' },
   { id: 'argon2', label: 'Argon2', blurb: 'Memory-hard winner of the Password Hashing Competition.' },
+  { id: 'kdf', label: 'KDF', blurb: 'Dedicated password-hashing / key-derivation functions.' },
   { id: 'ldap', label: 'LDAP', blurb: 'RFC 2307 {SCHEME}-prefixed userPassword values.' },
   { id: 'openldap', label: 'OpenLDAP', blurb: 'Schemes shipped with OpenLDAP slapd.' },
   { id: 'apache', label: 'Apache', blurb: 'htpasswd / htdigest password formats.' },
@@ -35,6 +36,7 @@ export const categoryMap = {
   hash: ['adler32', 'crc32', 'crc32b', 'crc32c', 'fnv132', 'fnv164', 'fnv1a32', 'fnv1a64', 'gost', 'gost-crypto', 'haval128,3', 'haval128,4', 'haval128,5', 'haval160,3', 'haval160,4', 'haval160,5', 'haval192,3', 'haval192,4', 'haval192,5', 'haval224,3', 'haval224,4', 'haval224,5', 'haval256,3', 'haval256,4', 'haval256,5', 'joaat', 'md2', 'md4', 'md5', 'murmur3a', 'murmur3c', 'murmur3f', 'ripemd128', 'ripemd160', 'ripemd256', 'ripemd320', 'sha1', 'sha224', 'sha256', 'sha3-224', 'sha3-256', 'sha3-384', 'sha3-512', 'sha384', 'sha512', 'sha512/224', 'sha512/256', 'snefru', 'snefru256', 'tiger128,3', 'tiger128,4', 'tiger160,3', 'tiger160,4', 'tiger192,3', 'tiger192,4', 'whirlpool', 'xxh128', 'xxh3', 'xxh32', 'xxh64'],
   haval: ['haval128,3', 'haval128,4', 'haval128,5', 'haval160,3', 'haval160,4', 'haval160,5', 'haval192,3', 'haval192,4', 'haval192,5', 'haval224,3', 'haval224,4', 'haval224,5', 'haval256,3', 'haval256,4', 'haval256,5'],
   inspircd: ['md5', 'ripemd160', 'sha256'],
+  kdf: ['argon2i', 'argon2id', 'bcrypt', 'scrypt', 'pbkdf2-sha256', 'pbkdf2-sha512'],
   ircu: ['crypt', 'crypt-blowfish', 'crypt-md5', 'crypt-sha256', 'crypt-sha512', 'ircu-plain', 'ircu-smd5'],
   ldap: ['ldap-cleartext', 'ldap-crypt', 'ldap-crypt-blowfish', 'ldap-crypt-ext', 'ldap-crypt-md5', 'ldap-md5', 'ldap-sha', 'ldap-sha256', 'ldap-sha384', 'ldap-sha512', 'ldap-smd5', 'ldap-ssha', 'ldap-ssha256', 'ldap-ssha384', 'ldap-ssha512'],
   md: ['md2', 'md4', 'md5'],
@@ -62,8 +64,9 @@ export const ALL_TYPES = [
   'ldap-crypt-md5', 'ldap-md5', 'ldap-sha', 'ldap-sha256', 'ldap-sha384', 'ldap-sha512', 'ldap-smd5', 'ldap-ssha',
   'ldap-ssha256', 'ldap-ssha384', 'ldap-ssha512', 'md2', 'md4', 'md5', 'murmur3a', 'murmur3c', 'murmur3f', 'null',
   'openldap-cleartext', 'openldap-crypt', 'openldap-crypt-blowfish', 'openldap-crypt-ext', 'openldap-crypt-md5',
-  'openldap-md5', 'openldap-sha', 'openldap-smd5', 'openldap-ssha', 'plain', 'premysql41', 'ripemd128', 'ripemd160',
-  'ripemd256', 'ripemd320', 'sha1', 'sha224', 'sha256', 'sha3-224', 'sha3-256', 'sha3-384', 'sha3-512', 'sha384',
+  'openldap-md5', 'openldap-sha', 'openldap-smd5', 'openldap-ssha', 'pbkdf2-sha256', 'pbkdf2-sha512', 'plain',
+  'premysql41', 'ripemd128', 'ripemd160',
+  'ripemd256', 'ripemd320', 'scrypt', 'sha1', 'sha224', 'sha256', 'sha3-224', 'sha3-256', 'sha3-384', 'sha3-512', 'sha384',
   'sha512', 'sha512/224', 'sha512/256', 'snefru', 'snefru256', 'tiger128,3', 'tiger128,4', 'tiger160,3', 'tiger160,4',
   'tiger192,3', 'tiger192,4', 'unreal-argon2', 'unreal-argon2id', 'unreal-bcrypt', 'unreal-crypt', 'unreal-md5',
   'unreal-ripemd160', 'unreal-sha1', 'whirlpool', 'xxh128', 'xxh3', 'xxh32', 'xxh64',
@@ -77,6 +80,10 @@ const P = {
   argonMem: { key: 'memory', label: 'Memory (KiB)', min: 8, max: 262144, step: 1024, default: 65536 },
   argonTime: { key: 'iterations', label: 'Time cost', min: 1, max: 10, step: 1, default: 4 },
   argonPar: { key: 'parallelism', label: 'Parallelism', min: 1, max: 8, step: 1, default: 1 },
+  scryptLn: { key: 'ln', label: 'log2 N', min: 10, max: 17, step: 1, default: 15, hint: 'memory = 128·N·r bytes' },
+  scryptR: { key: 'r', label: 'Block size', min: 1, max: 16, step: 1, default: 8 },
+  scryptP: { key: 'p', label: 'Parallelism', min: 1, max: 8, step: 1, default: 1 },
+  pbkdf2Iter: { key: 'iterations', label: 'Iterations', min: 1000, max: 5000000, step: 1000, default: 600000 },
 }
 const ARGON_PARAMS = [P.argonMem, P.argonTime, P.argonPar]
 // UnrealIRCd ships tighter Argon2id defaults (m=6144, t=2, p=2).
@@ -183,6 +190,13 @@ Object.assign(TYPES, {
   argon2id: meta('argon2', 'Argon2id (hybrid, recommended).', { salted: true, deterministic: false, params: ARGON_PARAMS }),
 })
 
+// ---- other KDFs --------------------------------------------------------------
+Object.assign(TYPES, {
+  scrypt: meta('kdf', 'scrypt, memory-hard (PHC string format).', { salted: true, deterministic: false, params: [P.scryptLn, P.scryptR, P.scryptP] }),
+  'pbkdf2-sha256': meta('kdf', 'PBKDF2-HMAC-SHA-256 (PHC string format).', { salted: true, deterministic: false, params: [P.pbkdf2Iter] }),
+  'pbkdf2-sha512': meta('kdf', 'PBKDF2-HMAC-SHA-512 (PHC string format).', { salted: true, deterministic: false, params: [P.pbkdf2Iter] }),
+})
+
 // ---- LDAP / OpenLDAP -------------------------------------------------------
 const ldapNote = (s) => `RFC 2307 {${s}} userPassword value.`
 Object.assign(TYPES, {
@@ -246,6 +260,9 @@ function setStrength(score, types) {
 
 setStrength(95, ['argon2id'])                                    // memory-hard, tunable, current best practice
 setStrength(93, ['argon2i'])                                     // memory-hard, data-independent variant
+setStrength(88, ['scrypt'])                                      // memory-hard, pre-Argon2
+setStrength(68, ['pbkdf2-sha512'])                               // iterated + salted, GPU-parallel
+setStrength(65, ['pbkdf2-sha256'])
 setStrength(90, ['unreal-argon2', 'unreal-argon2id'])            // argon2id with modest fixed params (m=6144)
 setStrength(85, ['bcrypt', 'crypt-blowfish', 'crypt-blowfish-2a', 'crypt-blowfish-2y',
   'ldap-crypt-blowfish', 'openldap-crypt-blowfish', 'apache-bcrypt'])
@@ -297,6 +314,53 @@ export function strengthTier(score) {
   return 'none'
 }
 
+// ---- crack-rate context ------------------------------------------------------
+// Order-of-magnitude guesses/second on a single modern GPU (RTX-4090-class
+// hashcat benchmarks, rounded hard). Used only for the strength tooltip, at
+// each type's default params; salted wrappers crack at their core digest rate.
+function setRate(rate, types) {
+  for (const t of types) TYPES[t].rate = rate
+}
+setRate(3e11, ['md4', 'crypt-nthash'])                            // NTLM-class
+setRate(1.6e11, ['md5', 'ldap-md5', 'openldap-md5', 'ldap-smd5', 'openldap-smd5', 'unreal-md5'])
+setRate(5e10, ['sha1', 'apache-sha', 'ldap-sha', 'openldap-sha', 'ldap-ssha', 'openldap-ssha', 'unreal-sha1'])
+setRate(2.2e10, ['sha224', 'sha256', 'ldap-sha256', 'ldap-ssha256'])
+setRate(2.5e10, ['ripemd128', 'ripemd160', 'ripemd256', 'ripemd320', 'unreal-ripemd160'])
+setRate(7e9, ['sha384', 'sha512', 'sha512/224', 'sha512/256', 'ldap-sha384', 'ldap-sha512', 'ldap-ssha384', 'ldap-ssha512'])
+setRate(5e9, ['sha3-224', 'sha3-256', 'sha3-384', 'sha3-512'])
+setRate(2e9, ['whirlpool', 'gost', 'gost-crypto'])
+setRate(6e9, ['crypt', 'apache-crypt', 'unreal-crypt', 'ldap-crypt', 'openldap-crypt'])
+setRate(1e9, ['premysql41'])
+setRate(6.6e7, ['crypt-md5', 'apache-md5', 'ldap-crypt-md5', 'openldap-crypt-md5', 'ircu-smd5'])
+setRate(1e6, ['crypt-sha256', 'apache-sha256'])
+setRate(2.5e5, ['crypt-sha512', 'apache-sha512'])
+setRate(4e4, ['pbkdf2-sha256'])
+setRate(2e4, ['pbkdf2-sha512'])
+setRate(6e3, ['bcrypt', 'crypt-blowfish', 'crypt-blowfish-2a', 'crypt-blowfish-2x', 'crypt-blowfish-2y',
+  'apache-bcrypt', 'unreal-bcrypt', 'ldap-crypt-blowfish', 'openldap-crypt-blowfish'])  // cost 10
+setRate(5e3, ['scrypt'])
+setRate(5e2, ['argon2i', 'argon2id', 'unreal-argon2', 'unreal-argon2id'])
+setRate(1e12, ['adler32', 'crc32', 'crc32b', 'crc32c', 'fnv132', 'fnv164', 'fnv1a32', 'fnv1a64',
+  'joaat', 'murmur3a', 'murmur3c', 'murmur3f', 'xxh32', 'xxh64', 'xxh3', 'xxh128'])
+
+// "~3 weeks to exhaust 8-char mixed-case+digit passwords on one GPU"
+export function crackContext(meta) {
+  if (!meta.rate) return meta.strength === 0 ? 'No protection: recoverable instantly.' : ''
+  const space = 62 ** 8 // 8-char [a-zA-Z0-9]
+  const secs = space / meta.rate
+  const units = [[31557600, 'year'], [2629800, 'month'], [604800, 'week'], [86400, 'day'], [3600, 'hour'], [60, 'minute'], [1, 'second']]
+  let human = 'under a second'
+  for (const [s, name] of units) {
+    if (secs >= s) {
+      const n = Math.round(secs / s)
+      human = `~${n.toLocaleString('en-US')} ${name}${n === 1 ? '' : 's'}`
+      break
+    }
+  }
+  return `One modern GPU tries ~${meta.rate.toExponential(0).replace('e+', 'e')} guesses/s: ` +
+    `all 8-char letter+digit passwords fall in ${human}.`
+}
+
 // Human labels for each badge kind.
 export const KIND_LABEL = {
   checksum: 'checksum',
@@ -304,6 +368,7 @@ export const KIND_LABEL = {
   crypt: 'crypt',
   bcrypt: 'bcrypt',
   argon2: 'argon2',
+  kdf: 'kdf',
   ldap: 'ldap',
   apache: 'apache',
   irc: 'irc',

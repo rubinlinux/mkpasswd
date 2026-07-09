@@ -14,7 +14,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "vectors": "php tests/gen-vectors.php",
-    "test": "node tests/check.mjs && node tests/wrapper-verify.mjs",
+    "test": "node tests/check.mjs && node tests/wrapper-verify.mjs && node tests/identify.mjs",
     "test:e2e": "node tests/e2e.mjs"
   },
   "dependencies": {

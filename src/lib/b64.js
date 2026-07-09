@@ -22,6 +22,29 @@ export function bytesToB64(bytes, { pad = true } = {}) {
   return out
 }
 
+export function b64ToBytes(s) {
+  const clean = s.replace(/=+$/, '')
+  const out = new Uint8Array(Math.floor((clean.length * 6) / 8))
+  let acc = 0, bits = 0, oi = 0
+  for (const ch of clean) {
+    const v = STD.indexOf(ch)
+    if (v < 0) continue
+    acc = (acc << 6) | v
+    bits += 6
+    if (bits >= 8) {
+      bits -= 8
+      out[oi++] = (acc >> bits) & 0xff
+    }
+  }
+  return out.subarray(0, oi)
+}
+
+export function bytesToHex(bytes) {
+  let s = ''
+  for (const b of bytes) s += b.toString(16).padStart(2, '0')
+  return s
+}
+
 export function hexToBytes(hex) {
   const b = new Uint8Array(hex.length / 2)
   for (let i = 0; i < b.length; i++) b[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16)

@@ -196,7 +196,36 @@ try {
     if (deep.rowCount) break
   }
 
+  // Identify & verify: paste a known bcrypt of "password", confirm it's
+  // recognized as bcrypt and the password verifies (green match).
+  await send('Page.navigate', { url: BASE })
+  await sleep(1500)
+  await evaluate(send, `[...document.querySelectorAll('button')].find(b => b.textContent.includes('Identify')).click()`)
+  await sleep(400)
+  const KNOWN_BCRYPT = '$2y$10$FS2X9NsjudF4iNaQztD7i.LcNBkdG9fxX7XAoETiPnxspIwHc6h32' // bcrypt("password"), cost 10
+  await evaluate(send, `(() => {
+    const ta = document.querySelector('textarea')
+    Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set.call(ta, ${JSON.stringify(KNOWN_BCRYPT)})
+    ta.dispatchEvent(new Event('input', { bubbles: true }))
+    const pw = document.querySelector('input[type=text]')
+    Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(pw, 'password')
+    pw.dispatchEvent(new Event('input', { bubbles: true }))
+    return true
+  })()`)
+  let ident = { has: false, match: false }
+  for (let i = 0; i < 20; i++) {
+    await sleep(250)
+    ident = await evaluate(send, `(() => {
+      const rows = [...document.querySelectorAll('.grid > div')]
+      const types = rows.map(r => r.querySelector('code')?.textContent)
+      const bc = rows.find(r => r.querySelector('code')?.textContent === 'bcrypt')
+      return { has: types.includes('bcrypt'), match: !!bc && bc.textContent.includes('match') && !bc.textContent.includes('no match') }
+    })()`)
+    if (ident.match) break
+  }
+
   console.log('all-category rows:', count, '| md5:', sampleMd5)
+  console.log('identify bcrypt:', ident.has, '| verify match:', ident.match)
   console.log('first by strength:', firstByStrength, '| first by name:', firstByName)
   console.log('ldap-category rows:', ldap.rowCount, '| ldap-md5:', ldap.ldapMd5)
   console.log('hash after chip click:', hashAfterChip, '| logo loaded:', logoOk)
@@ -213,6 +242,8 @@ try {
     && logoOk
     && deep.rowCount === 1
     && deep.first === 'ldap-md5'
+    && ident.has
+    && ident.match
     && pwa.sw
     && pwa.manifest === 200
     && errors.length === 0

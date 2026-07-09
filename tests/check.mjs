@@ -141,6 +141,32 @@ if (match('argon2')) {
   }
 }
 
+// --- scrypt / PBKDF2 vs node:crypto ground truth -------------------------------
+if (match('scrypt') || match('pbkdf2') || filters.length === 0) {
+  const { scryptHash, pbkdf2Hash } = await import('../src/lib/kdf.js')
+  const { scryptSync, pbkdf2Sync } = await import('node:crypto')
+  const { b64ToBytes, bytesToHex } = await import('../src/lib/b64.js')
+  const enc = new TextEncoder()
+  const kdfCases = [
+    ['password', '0123456789abcdef'],
+    ['', 'fedcba9876543210'],
+    ['pässword™ with a much longer body 0123456789', '00112233445566778899aabbccddeeff'],
+  ]
+  for (const [pw, saltHex] of kdfCases) {
+    const salt = hexToBytes(saltHex)
+    const sOurs = await scryptHash(enc.encode(pw), { ln: 14, r: 8, p: 1, salt })
+    const sWant = scryptSync(Buffer.from(pw, 'utf8'), salt, 32, { N: 2 ** 14, r: 8, p: 1, maxmem: 64 * 1024 * 1024 }).toString('hex')
+    record('scrypt', JSON.stringify(pw), sWant, bytesToHex(b64ToBytes(sOurs.value.split('$')[4])))
+    record('scrypt-format', JSON.stringify(pw), '$scrypt$ln=14,r=8,p=1$', sOurs.value.slice(0, 22))
+    for (const dig of ['sha256', 'sha512']) {
+      const iters = 12000
+      const ours = await pbkdf2Hash(enc.encode(pw), { digest: dig === 'sha512' ? 'SHA-512' : 'SHA-256', iterations: iters, salt })
+      const want = pbkdf2Sync(Buffer.from(pw, 'utf8'), salt, iters, dig === 'sha512' ? 64 : 32, dig).toString('hex')
+      record(`pbkdf2-${dig}`, JSON.stringify(pw), want, bytesToHex(b64ToBytes(ours.value.split('$')[4])))
+    }
+  }
+}
+
 // --- registry integrity: every type carries a strength score ------------------
 {
   const { ALL_TYPES, TYPES } = await import('../src/lib/registry.js')
